@@ -8,6 +8,13 @@
 \description{
 Creates a data frame with the residuals of partial regressions of the main explanatory variable and the variable of interest. This method follows the Frisch-Waugh-Lovell theorem, as explained in Lovell (2008) \doi{10.3200/JECE.39.1.88-91}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://marcboschmatas.github.io/partialling.out/}
+}
+
+}
 \author{
 \strong{Maintainer}: Marc Bosch-Matas \email{mboschmatas@gmail.com} (\href{https://orcid.org/0009-0008-8653-0577}{ORCID})
 

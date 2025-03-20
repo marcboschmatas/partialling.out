@@ -7,27 +7,36 @@
 partialling_out(model, data, weights, both, ...)
 }
 \arguments{
-\item{model}{lm, feols, or felm object for which we want to residualise the variables}
+\item{model}{object for which we want to residualise variables}
 
 \item{data}{data.frame used in the original model}
 
 \item{weights}{a numeric vector for weighting the partial models}
 
-\item{both}{if \code{TRUE} will residualise both the variable of interest and the first explanatory variable in the model. If \code{FALSE}, only the latter. Set to \code{TRUE} by default}
+\item{both}{if \code{TRUE} will residualise both the variable of interest and the
+first explanatory variable in the model. If \code{FALSE}, only the latter.
+Set to \code{TRUE} by default}
 
-\item{...}{Any other lm, feols, or felm parameters that will be passed to the partial regressions}
+\item{...}{Any other lm, feols, or felm parameters that will be passed to the
+partial regressions}
 }
 \description{
-Creates a data.frame of the residualised main explanatory variable and, if wanted, variable of interest of a linear or fixed effects model
+Creates a data.frame of the residualised main explanatory variable and,
+if wanted, variable of interest of a linear or fixed effects model
 }
 \details{
-The function regresses the main (i.e. first in the model) explanatory variable and the variable of interest (if parameter \code{both} is set to \code{TRUE}) against all other control variables and fixed effects and returns the residuals in a data.frame
+The function regresses the main (i.e. first in the model) explanatory
+variable and the variable of interest (if parameter \code{both} is set to \code{TRUE})
+against all other control variables and fixed effects and returns the
+residuals in a data.frame
+
 Will accept lm, felm (lfe package), and feols (fixest package) objects
 }
 \examples{
 \donttest{library(palmerpenguins)
 library(fixest)
-model <- feols(bill_length_mm ~ bill_depth_mm | species + island, data = penguins)
+model <- feols(bill_length_mm ~ bill_depth_mm | species + island,
+               data = penguins)
 partial_df <- partialling_out(model, penguins, both = TRUE)
 }
 }
