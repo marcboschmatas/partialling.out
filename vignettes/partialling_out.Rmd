@@ -29,7 +29,7 @@ library(partialling.out)
 library(tinytable)
 library(tinyplot)
 library(palmerpenguins)
-
+library(fwlplot)
 model <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
 summary(model)
 ```
@@ -68,31 +68,6 @@ tt(head(partialling_out(model, penguins, both = FALSE)))
 ```
 
 
-## Plotting the results
-
-Results can then be displayed in a scatterplot either regular or binned.
-
-```{r fig.height = 8, fig.width = 6}
-
-tinytheme("tufte")
-par(mfrow = c(2, 1))
-tinyplot(res$res_bill_depth_mm,
-         res$res_bill_length_mm); abline(resmodel)
-
-res$qnt <- cut(res$res_bill_depth_mm,
-               breaks = quantile(res$res_bill_depth_mm,
-                                 probs = seq(0, 1, .02)),
-               include.lowest = TRUE)
-
-
-res_qnt <- aggregate(cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
-                     data = res, FUN = mean)
-
-tinyplot(res_qnt$res_bill_depth_mm,
-         res_qnt$res_bill_length_mm); abline(resmodel)
-```
-
-
 ## Fixed effects models
 As stated, the model will also work with `feols` or `felm` models
 ```{r}
@@ -101,8 +76,8 @@ library(fixest)
 model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species,
                       data = penguins)
 
-
-tt(head(partialling_out(model_fixest, data = penguins)))
+res_fixest <- partialling_out(model_fixest, data = penguins)
+tt(head(res_fixest))
 ```
 
 
@@ -112,8 +87,46 @@ library(lfe)
 model_lfe <- felm(bill_length_mm ~ bill_depth_mm | species,
                   data = penguins)
 
+res_lfe <- partialling_out(model_lfe, data = penguins)
+tt(head(res_lfe))
+```
 
-tt(head(partialling_out(model_lfe, data = penguins)))
+
+
+## Plotting the results
+
+Results can then be displayed in a scatterplot either regular or binned.
+
+```{r fig.height = 8, fig.width = 6}
+
+tinytheme("tufte")
+par(mfrow = c(2, 1))
+
+resmodel <- lm(res_bill_length_mm ~  res_bill_depth_mm,
+               data = res_fixest)
+tinyplot(res_fixest$res_bill_depth_mm,
+         res_fixest$res_bill_length_mm); abline(resmodel)
+
+res_fixest$qnt <- cut(res_fixest$res_bill_depth_mm,
+                      breaks = quantile(res_fixest$res_bill_depth_mm,
+                                        probs = seq(0, 1, .02)),
+                      include.lowest = TRUE)
+
+
+res_qnt <- aggregate(cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
+                     data = res_fixest, FUN = mean)
+
+tinyplot(res_qnt$res_bill_depth_mm,
+         res_qnt$res_bill_length_mm); abline(resmodel)
+```
+
+Plotting all residuals is equivalent to the following approach in `fwlplot`
+
+```{r fig.height = 4, fig.width = 6}
+
+fwlplot(bill_length_mm ~ bill_depth_mm | species,
+                  data = penguins)
+
 ```
 
 

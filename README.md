@@ -18,15 +18,17 @@ Partialling out is a package that allows to generate residualised
 variables of already existing linear or fixed effects models. So far it
 works with `lm`, `felm` (`lfe`package) and `feols` (`fixest` package)
 following the Frisch-Waugh-Lovell theorem, as explained in Lovell
-([2008](doi:10.3200/JECE.39.1.88-91)). It follows a logic similar to the
-`fwlplot` package with three main differences.
+([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has
+already been implemented in
+\[`fwlplot`\]((<https://github.com/kylebutts/fwlplot>), this package
+offers three new characteristics.
 
 - It uses an already existing model instead of a formula.
 
 - Works with `lm` and `felm` objects alongside `feols`.
 
-- Returns a data.frame, thus offering more freedom of what to do with
-  the results.
+- Returns a data.frame with residualised variables instead of a plot,
+  thus offering more freedom of what to do with the results.
 
 ## Installation
 

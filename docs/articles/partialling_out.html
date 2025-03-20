@@ -42,6 +42,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/marcboschmatas/partialling.out/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -58,7 +59,7 @@
       <h1>partialling_out</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/marcboschmatas/partialling.out/blob/HEAD/vignettes/partialling_out.Rmd" class="external-link"><code>vignettes/partialling_out.Rmd</code></a></small>
       <div class="d-none name"><code>partialling_out.Rmd</code></div>
     </div>
 
@@ -73,7 +74,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/tinyplot/" class="external-link">tinyplot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
-<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">fwlplot</span><span class="op">)</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span>  <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -292,43 +293,18 @@ window.addEventListener('load', function () { styleCell_ijtdx5ntl7d2hervnp7p(0, 
 <!-- hack to avoid NA insertion in last line -->
 </div>
 <div class="section level2">
-<h2 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
-</h2>
-<p>Results can then be displayed in a scatterplot either regular or
-binned.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">res</span><span class="op">$</span><span class="va">qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>               breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>                                 probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">.02</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>               include.lowest <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="va">res_qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">res_bill_depth_mm</span>, <span class="va">res_bill_length_mm</span><span class="op">)</span> <span class="op">~</span> <span class="va">qnt</span>,</span>
-<span>                     data <span class="op">=</span> <span class="va">res</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span></code></pre></div>
-<p><img src="partialling_out_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
-</div>
-<div class="section level2">
 <h2 id="fixed-effects-models">Fixed effects models<a class="anchor" aria-label="anchor" href="#fixed-effects-models"></a>
 </h2>
 <p>As stated, the model will also work with <code>feols</code> or
 <code>felm</code> models</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lrberge.github.io/fixest/" class="external-link">fixest</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
 <span>                      data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_fixest</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_fixest</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -412,14 +388,14 @@ window.addEventListener('load', function () { styleCell_jyhdexk56yzyz96aco8g(0, 
 </table>
 </div>
 <!-- hack to avoid NA insertion in last line -->
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-econometrics/lfe" class="external-link">lfe</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_lfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
 <span>                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_lfe</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res_lfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_lfe</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_lfe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -505,12 +481,47 @@ window.addEventListener('load', function () { styleCell_j6k6qk1n4y3wmwlmimxg(0, 
 <!-- hack to avoid NA insertion in last line -->
 </div>
 <div class="section level2">
+<h2 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
+</h2>
+<p>Results can then be displayed in a scatterplot either regular or
+binned.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span>  <span class="va">res_bill_depth_mm</span>,</span>
+<span>               data <span class="op">=</span> <span class="va">res_fixest</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>         <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_fixest</span><span class="op">$</span><span class="va">qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>                      breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>                                        probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">.02</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                      include.lowest <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">res_qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">res_bill_depth_mm</span>, <span class="va">res_bill_length_mm</span><span class="op">)</span> <span class="op">~</span> <span class="va">qnt</span>,</span>
+<span>                     data <span class="op">=</span> <span class="va">res_fixest</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>         <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span></code></pre></div>
+<p><img src="partialling_out_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
+<p>Plotting all residuals is equivalent to the following approach in
+<code>fwlplot</code></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/fwlplot/man/fwl_plot.html" class="external-link">fwlplot</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
+<span>                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
+<p><img src="partialling_out_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
+</div>
+<div class="section level2">
 <h2 id="adding-other-parameters-to-the-model">Adding other parameters to the model<a class="anchor" aria-label="anchor" href="#adding-other-parameters-to-the-model"></a>
 </h2>
 <p>Any parameters that could be passed to <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>,
 <code><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols()</a></code>, or <code><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm()</a></code>, can be passed to
 <code><a href="../reference/partialling_out.html">partialling_out()</a></code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span> <span class="op">+</span> <span class="va">island</span>,</span>
 <span>                      data <span class="op">=</span> <span class="va">penguins</span>, cluster <span class="op">=</span> <span class="op">~</span><span class="va">species</span><span class="op">)</span></span>
 <span></span>
@@ -519,12 +530,12 @@ window.addEventListener('load', function () { styleCell_j6k6qk1n4y3wmwlmimxg(0, 
 <!-- preamble start -->
 
     <script>
-      function styleCell_nlop84sllwu67riupt9a(i, j, css_id) {
-        var table = document.getElementById("tinytable_nlop84sllwu67riupt9a");
+      function styleCell_u59uat0vhbt5wd3qsm91(i, j, css_id) {
+        var table = document.getElementById("tinytable_u59uat0vhbt5wd3qsm91");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_nlop84sllwu67riupt9a');
+        var table = document.getElementById('tinytable_u59uat0vhbt5wd3qsm91');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -532,8 +543,8 @@ window.addEventListener('load', function () { styleCell_j6k6qk1n4y3wmwlmimxg(0, 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_nlop84sllwu67riupt9a(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_nlop84sllwu67riupt9a");
+      function spanCell_u59uat0vhbt5wd3qsm91(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_u59uat0vhbt5wd3qsm91");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -559,13 +570,13 @@ window.addEventListener('load', function () { styleCell_j6k6qk1n4y3wmwlmimxg(0, 
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_nlop84sllwu67riupt9a(0, 0, 'tinytable_css_idxw7gp3psf6zhmmp7w13w') })
-window.addEventListener('load', function () { styleCell_nlop84sllwu67riupt9a(0, 1, 'tinytable_css_idxw7gp3psf6zhmmp7w13w') })
+window.addEventListener('load', function () { styleCell_u59uat0vhbt5wd3qsm91(0, 0, 'tinytable_css_idtguw6g9g19xr8c6c098s') })
+window.addEventListener('load', function () { styleCell_u59uat0vhbt5wd3qsm91(0, 1, 'tinytable_css_idtguw6g9g19xr8c6c098s') })
     </script><style>
-    .table td.tinytable_css_idxw7gp3psf6zhmmp7w13w, .table th.tinytable_css_idxw7gp3psf6zhmmp7w13w {  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idtguw6g9g19xr8c6c098s, .table th.tinytable_css_idtguw6g9g19xr8c6c098s {  border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <div class="container">
-      <table class="table table table-borderless" id="tinytable_nlop84sllwu67riupt9a" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table table-borderless" id="tinytable_u59uat0vhbt5wd3qsm91" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">res_bill_length_mm</th>
                 <th scope="col">res_bill_depth_mm</th>

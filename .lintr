@@ -3,5 +3,6 @@ linters: linters_with_defaults(
   )
 exclusions: list(
     "doc/partialling_out.R",
-    "inst/tinytest/test_partialling.out.R"
+    "inst/tinytest/test_partialling.out.R",
+    "R/ssr-stats-standards.R"
   )
