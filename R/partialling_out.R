@@ -19,6 +19,8 @@
 #' Set to `TRUE` by default
 #' @param ... Any other lm, feols, or felm parameters that will be passed to the
 #' partial regressions
+#' @returns a data.frame with the (residualised) variable of interest and
+#' residualised main explanatory variable
 #' @examples
 #' \donttest{library(palmerpenguins)
 #' library(fixest)
