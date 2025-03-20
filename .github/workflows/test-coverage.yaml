@@ -4,8 +4,9 @@ on:
   push:
     branches: [main, master]
   pull_request:
+    branches: [main, master]
 
-name: test-coverage.yaml
+name: test-coverage
 
 permissions: read-all
 
@@ -24,7 +25,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2
+          extra-packages: any::covr
           needs: coverage
 
       - name: Test coverage
@@ -34,14 +35,12 @@ jobs:
             clean = FALSE,
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
-          print(cov)
           covr::to_cobertura(cov)
         shell: Rscript {0}
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
-          # Fail if error if not on PR, or if on PR and token is given
-          fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
           file: ./cobertura.xml
           plugin: noop
           disable_search: true
@@ -51,7 +50,7 @@ jobs:
         if: always()
         run: |
           ## --------------------------------------------------------------------
-          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+          find ${{ runner.temp }}/package -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload test results
