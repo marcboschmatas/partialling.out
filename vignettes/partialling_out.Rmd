@@ -124,8 +124,7 @@ Plotting all residuals is equivalent to the following approach in `fwlplot`
 
 ```{r fig.height = 4, fig.width = 6}
 
-fwlplot(bill_length_mm ~ bill_depth_mm | species,
-                  data = penguins)
+fwlplot(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 
 ```
 
