@@ -1,0 +1,27 @@
+Package: partialling.out
+Title: Residuals from partial regressions
+Version: 0.0.0.9000
+Authors@R: 
+    person("Marc", "Bosch-Matas", , "mboschmatas@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0008-8653-0577"))
+Description: Creates a data frame with the residuals of partial regressions of the main explanatory variable and the variable of interest. This method follows the Frisch-Waugh-Lovell theorem, as explained in Lovell (2008) <doi:10.3200/JECE.39.1.88-91>.
+License: GPL (>= 3)
+Suggests: 
+    tinytest,
+    knitr,
+    rmarkdown,
+    palmerpenguins,
+    tinytable,
+    tinyplot
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+VignetteBuilder: knitr
+Imports: 
+    glue,
+    lifecycle,
+    rlang,
+    fixest,
+    lfe,
+    stats
