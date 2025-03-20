@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/partialling.out)](https://CRAN.R-project.org/package=partialling.out)
+[![Codecov test coverage](https://codecov.io/gh/marcboschmatas/partialling.out/graph/badge.svg)](https://app.codecov.io/gh/marcboschmatas/partialling.out)
 <!-- badges: end -->
 
 Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with `lm`, `felm` (`lfe`package) and `feols`  (`fixest` package) following the Frisch-Waugh-Lovell theorem, as explained in Lovell ([2008](doi:10.3200/JECE.39.1.88-91)). It follows a logic similar to the `fwlplot` package with three main differences.

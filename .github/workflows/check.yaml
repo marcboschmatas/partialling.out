@@ -52,6 +52,12 @@ jobs:
 
       - name: Test
         run: ./run.sh run_tests
+  pkgcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: ropensci-review-tools/pkgcheck-action@main
 
       # - name: Coverage
       #   if: ${{ matrix.os == 'ubuntu-latest' }}

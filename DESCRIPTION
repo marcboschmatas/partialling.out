@@ -6,6 +6,7 @@ Authors@R:
            comment = c(ORCID = "0009-0008-8653-0577"))
 Description: Creates a data frame with the residuals of partial regressions of the main explanatory variable and the variable of interest. This method follows the Frisch-Waugh-Lovell theorem, as explained in Lovell (2008) <doi:10.3200/JECE.39.1.88-91>.
 License: GPL (>= 3)
+BugReports: https://github.com/marcboschmatas/partialling.out/issues
 Suggests: 
     tinytest,
     knitr,
