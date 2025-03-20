@@ -12,6 +12,7 @@ Creates a data frame with the residuals of partial regressions of the main expla
 Useful links:
 \itemize{
   \item \url{https://marcboschmatas.github.io/partialling.out/}
+  \item Report bugs at \url{https://github.com/marcboschmatas/partialling.out/issues}
 }
 
 }
