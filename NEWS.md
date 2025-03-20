@@ -1,3 +1,5 @@
 # partialling.out (development version)
 
-* Initial CRAN submission.
+## partialling.out 0.0.1
+
+First version

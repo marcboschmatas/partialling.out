@@ -1,6 +1,6 @@
 Package: partialling.out
 Title: Residuals from partial regressions
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person("Marc", "Bosch-Matas", , "mboschmatas@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0008-8653-0577"))
