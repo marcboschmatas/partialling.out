@@ -84,7 +84,7 @@
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>Let’s make a simple linear model first.</p>
+<p>The workflow for <code>partialling.out</code> is rather simple: first, create a linear or fixed effects model.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">partialling.out</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a></span><span class="op">)</span></span>
@@ -163,198 +163,12 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">resmodel</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     bill_depth_mm res_bill_depth_mm </span></span>
 <span><span class="co">#&gt;          1.394011          1.394011</span></span></code></pre></div>
-<p>If <code>both</code> is set to <code>FALSE</code>, the function will return the actual Y values and the residualised X values.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">penguins</span>, both <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th>bill_length_mm</th>
-<th>res_bill_depth_mm</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>39.1</td>
-<td>0.3536424</td>
-</tr>
-<tr class="even">
-<td>39.5</td>
-<td>-0.9463576</td>
-</tr>
-<tr class="odd">
-<td>40.3</td>
-<td>-0.3463576</td>
-</tr>
-<tr class="even">
-<td>36.7</td>
-<td>0.9536424</td>
-</tr>
-<tr class="odd">
-<td>39.3</td>
-<td>2.2536424</td>
-</tr>
-<tr class="even">
-<td>38.9</td>
-<td>-0.5463576</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
-</h2>
-<p>Results can then be displayed in a scatterplot either regular or binned.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">res</span><span class="op">$</span><span class="va">qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>               breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>                                 probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">.02</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>               include.lowest <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="va">res_qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">res_bill_depth_mm</span>, <span class="va">res_bill_length_mm</span><span class="op">)</span> <span class="op">~</span> <span class="va">qnt</span>,</span>
-<span>                     data <span class="op">=</span> <span class="va">res</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-1.png"><!-- --></p>
-</div>
-<div class="section level2">
-<h2 id="fixed-effects-models">Fixed effects models<a class="anchor" aria-label="anchor" href="#fixed-effects-models"></a>
-</h2>
-<p>As stated, the model will also work with <code>feols</code> or <code>felm</code> models</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lrberge.github.io/fixest/" class="external-link">fixest</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
-<span>                      data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_fixest</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th>res_bill_length_mm</th>
-<th>res_bill_depth_mm</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>0.3086093</td>
-<td>0.3536424</td>
-</tr>
-<tr class="even">
-<td>0.7086093</td>
-<td>-0.9463576</td>
-</tr>
-<tr class="odd">
-<td>1.5086093</td>
-<td>-0.3463576</td>
-</tr>
-<tr class="even">
-<td>-2.0913907</td>
-<td>0.9536424</td>
-</tr>
-<tr class="odd">
-<td>0.5086093</td>
-<td>2.2536424</td>
-</tr>
-<tr class="even">
-<td>0.1086093</td>
-<td>-0.5463576</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-econometrics/lfe" class="external-link">lfe</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">model_lfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
-<span>                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_lfe</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th>res_bill_length_mm</th>
-<th>res_bill_depth_mm</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>0.3086093</td>
-<td>0.3536424</td>
-</tr>
-<tr class="even">
-<td>0.7086093</td>
-<td>-0.9463576</td>
-</tr>
-<tr class="odd">
-<td>1.5086093</td>
-<td>-0.3463576</td>
-</tr>
-<tr class="even">
-<td>-2.0913907</td>
-<td>0.9536424</td>
-</tr>
-<tr class="odd">
-<td>0.5086093</td>
-<td>2.2536424</td>
-</tr>
-<tr class="even">
-<td>0.1086093</td>
-<td>-0.5463576</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="adding-other-parameters-to-the-model">Adding other parameters to the model<a class="anchor" aria-label="anchor" href="#adding-other-parameters-to-the-model"></a>
-</h2>
-<p>Any parameters that could be passed to <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>, <code><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols()</a></code>, or <code><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm()</a></code>, can be passed to <code><a href="reference/partialling_out.html">partialling_out()</a></code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
-<span>                      data <span class="op">=</span> <span class="va">penguins</span>, cluster <span class="op">=</span> <span class="op">~</span><span class="va">species</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_fixest</span>, data <span class="op">=</span> <span class="va">penguins</span>, cluster <span class="op">=</span> <span class="op">~</span><span class="va">species</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th>res_bill_length_mm</th>
-<th>res_bill_depth_mm</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>0.3086093</td>
-<td>0.3536424</td>
-</tr>
-<tr class="even">
-<td>0.7086093</td>
-<td>-0.9463576</td>
-</tr>
-<tr class="odd">
-<td>1.5086093</td>
-<td>-0.3463576</td>
-</tr>
-<tr class="even">
-<td>-2.0913907</td>
-<td>0.9536424</td>
-</tr>
-<tr class="odd">
-<td>0.5086093</td>
-<td>2.2536424</td>
-</tr>
-<tr class="even">
-<td>0.1086093</td>
-<td>-0.5463576</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section level2">
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h2>
-<p>To the authors of the <a href="https://github.com/kylebutts/fwlplot" class="external-link">fwlplot</a> package, Kyle Butts and Grant McDermott, which has provided inspiration and ideas for this project. To my colleague Andreu Arenas-Jal for his insight and guiding.</p>
+<p>To the authors of the <a href="https://github.com/kylebutts/fwlplot" class="external-link">fwlplot</a> package, Kyle Butts and Grant McDermott, which has provided inspiration and ideas for this project.</p>
+<p>To my colleague Andreu Arenas-Jal for his insight and guiding.</p>
 </div>
 </div>
   </div>

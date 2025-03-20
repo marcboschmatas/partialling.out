@@ -77,29 +77,11 @@
 
     
     
-<p>Partialling out is a package that allows to generate residualised
-variables of already existing linear or fixed effects models. So far it
-works with <code>lm</code>, <code>felm</code> (<code>lfe</code>package)
-and <code>feols</code> (<code>fixest</code> package) following the
-Frisch-Waugh-Lovell theorem, as explained in Lovell (<a href="doi:10.3200/JECE.39.1.88-91">2008</a>). It follows a logic similar
-to the <code>fwlplot</code> package with three main differences. - It
-uses an already existing model instead of a formula. - Works with
-<code>lm</code> and <code>felm</code> objects alongside
-<code>feols</code>. - Returns a data.frame, thus offering more freedom
-of what to do with the results.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p>You can install the development version of partialling.out from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"marcboschmatas/partialling.out"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>Let’s make a simple linear model first.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">partialling.out</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/tinyplot/" class="external-link">tinyplot</a></span><span class="op">)</span></span>
@@ -132,12 +114,12 @@ of what to do with the results.</p>
 residualised variable of interest (bill length) and of the first
 explanatory variable (bill_length), i.e. it would return the residuals
 of the following two regressions.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">modelx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_depth_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -228,7 +210,7 @@ window.addEventListener('load', function () { styleCell_rrapy1m2305li10rw6b1(0, 
 model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be
 the same of the coefficient of <code>bill_depth_mm</code> in the
 original model.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">resmodel</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
@@ -236,7 +218,7 @@ original model.</p>
 <span><span class="co">#&gt;          1.394011          1.394011</span></span></code></pre></div>
 <p>If <code>both</code> is set to <code>FALSE</code>, the function will
 return the actual Y values and the residualised X values.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">penguins</span>, both <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
@@ -327,7 +309,7 @@ window.addEventListener('load', function () { styleCell_ijtdx5ntl7d2hervnp7p(0, 
 </h2>
 <p>Results can then be displayed in a scatterplot either regular or
 binned.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -352,7 +334,7 @@ binned.</p>
 </h2>
 <p>As stated, the model will also work with <code>feols</code> or
 <code>felm</code> models</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lrberge.github.io/fixest/" class="external-link">fixest</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
@@ -443,7 +425,7 @@ window.addEventListener('load', function () { styleCell_jyhdexk56yzyz96aco8g(0, 
 </table>
 </div>
 <!-- hack to avoid NA insertion in last line -->
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-econometrics/lfe" class="external-link">lfe</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_lfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
@@ -541,8 +523,8 @@ window.addEventListener('load', function () { styleCell_j6k6qk1n4y3wmwlmimxg(0, 
 <p>Any parameters that could be passed to <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>,
 <code><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols()</a></code>, or <code><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm()</a></code>, can be passed to
 <code><a href="../reference/partialling_out.html">partialling_out()</a></code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>,</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span> <span class="op">+</span> <span class="va">island</span>,</span>
 <span>                      data <span class="op">=</span> <span class="va">penguins</span>, cluster <span class="op">=</span> <span class="op">~</span><span class="va">species</span><span class="op">)</span></span>
 <span></span>
 <span></span>
@@ -603,28 +585,28 @@ window.addEventListener('load', function () { styleCell_nlop84sllwu67riupt9a(0, 
               </tr></thead>
 <tbody>
 <tr>
-<td> 0.3086093</td>
-                  <td> 0.3536424</td>
+<td> 0.1490198</td>
+                  <td> 0.2705878</td>
                 </tr>
 <tr>
-<td> 0.7086093</td>
-                  <td>-0.9463576</td>
+<td> 0.5490198</td>
+                  <td>-1.0294122</td>
                 </tr>
 <tr>
-<td> 1.5086093</td>
-                  <td>-0.3463576</td>
+<td> 1.3490198</td>
+                  <td>-0.4294122</td>
                 </tr>
 <tr>
-<td>-2.0913907</td>
-                  <td> 0.9536424</td>
+<td>-2.2509802</td>
+                  <td> 0.8705878</td>
                 </tr>
 <tr>
-<td> 0.5086093</td>
-                  <td> 2.2536424</td>
+<td> 0.3490198</td>
+                  <td> 2.1705878</td>
                 </tr>
 <tr>
-<td> 0.1086093</td>
-                  <td>-0.5463576</td>
+<td>-0.0509802</td>
+                  <td>-0.6294122</td>
                 </tr>
 </tbody>
 </table>
