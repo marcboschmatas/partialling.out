@@ -4,7 +4,9 @@ name: ci
 
 on:
   push:
+    branches: [main, master]
   pull_request:
+    branches: [main, master]
 
 env:
   _R_CHECK_FORCE_SUGGESTS_: "false"
