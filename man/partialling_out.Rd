@@ -20,6 +20,10 @@ Set to \code{TRUE} by default}
 \item{...}{Any other lm, feols, or felm parameters that will be passed to the
 partial regressions}
 }
+\value{
+a data.frame with the (residualised) variable of interest and
+residualised main explanatory variable
+}
 \description{
 Creates a data.frame of the residualised main explanatory variable and,
 if wanted, variable of interest of a linear or fixed effects model
