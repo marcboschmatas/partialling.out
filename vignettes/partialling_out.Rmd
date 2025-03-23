@@ -49,7 +49,7 @@ modelx <- lm(bill_depth_mm ~ species, data = penguins)
 ```{r}
 res <- partialling_out(model, data = penguins)
 
-tt(head(res)) |> 
+tt(head(res)) |>
   format_tt(digits = 2)
 ```
 
@@ -65,7 +65,7 @@ print(c(model$coefficients[2], resmodel$coefficients[2]))
 If `both` is set to `FALSE`, the function will return the actual Y values and the residualised X values.
 
 ```{r}
-tt(head(partialling_out(model, penguins, both = FALSE))) |> 
+tt(head(partialling_out(model, penguins, both = FALSE))) |>
   format_tt(digits = 2)
 ```
 
@@ -79,7 +79,7 @@ model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species,
                       data = penguins)
 
 res_fixest <- partialling_out(model_fixest, data = penguins)
-tt(head(res_fixest)) |> 
+tt(head(res_fixest)) |>
   format_tt(digits = 2)
 ```
 
@@ -93,7 +93,7 @@ model_lfe <- felm(bill_length_mm ~ bill_depth_mm | species,
 res_lfe <- partialling_out(model_lfe, data = penguins)
 
 
-tt(head(res_lfe)) |> 
+tt(head(res_lfe)) |>
   format_tt(digits = 2)
 ```
 
@@ -109,10 +109,9 @@ tinytheme("tufte")
 par(mfrow = c(2, 1))
 
 
-{tinyplot(res_fixest$res_bill_length_mm ~ 
-         res_fixest$res_bill_depth_mm)
-  tinyplot_add(res_fixest$res_bill_length_mm ~ 
-               res_fixest$res_bill_depth_mm, type = "lm")}
+tinyplot(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm)
+tinyplot_add(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
+             type = "lm")
 
 res_fixest$qnt <- cut(res_fixest$res_bill_depth_mm,
                       breaks = quantile(res_fixest$res_bill_depth_mm,
@@ -123,10 +122,9 @@ res_fixest$qnt <- cut(res_fixest$res_bill_depth_mm,
 res_qnt <- aggregate(cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
                      data = res_fixest, FUN = mean)
 
-{tinyplot(res_qnt$res_bill_length_mm ~ 
-         res_qnt$res_bill_depth_mm)
-  tinyplot_add(res_fixest$res_bill_length_mm ~ 
-               res_fixest$res_bill_depth_mm, type = "lm")}
+tinyplot(res_qnt$res_bill_length_mm ~ res_qnt$res_bill_depth_mm)
+tinyplot_add(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
+             type = "lm")
 ```
 
 Plotting all residuals is equivalent to the following approach in `fwlplot`

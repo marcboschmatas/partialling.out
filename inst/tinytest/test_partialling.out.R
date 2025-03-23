@@ -452,7 +452,7 @@ model <- lm(bill_length_mm ~  bill_depth_mm + species,
             data = penguins)
 res <- partialling_out(model, data = penguins)
 
-expect_true(unique(startsWith(colnames(res), "res")))
+expect_true(unique(sapply(res, is.numeric)))
 
 
 
@@ -461,7 +461,7 @@ model <- feols(bill_length_mm ~  bill_depth_mm | species,
 res <- partialling_out(model, data = penguins)
 
 
-expect_true(unique(startsWith(colnames(res), "res")))
+expect_true(unique(sapply(res, is.numeric)))
 
 
 
@@ -470,6 +470,6 @@ model <- felm(bill_length_mm ~  bill_depth_mm | species,
 res <- partialling_out(model, data = penguins)
 
 
-expect_true(unique(startsWith(colnames(res), "res")))
+expect_true(unique(sapply(res, is.numeric)))
 
 
