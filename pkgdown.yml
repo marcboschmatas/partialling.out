@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   partialling_out: partialling_out.html
-last_built: 2025-03-20T19:34Z
+last_built: 2025-03-23T19:50Z
 urls:
   reference: https://marcboschmatas.github.io/partialling.out/reference
   article: https://marcboschmatas.github.io/partialling.out/articles

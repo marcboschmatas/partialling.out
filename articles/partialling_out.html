@@ -99,9 +99,9 @@
 <span><span class="co">#&gt; Multiple R-squared:  0.7892, Adjusted R-squared:  0.7874 </span></span>
 <span><span class="co">#&gt; F-statistic: 421.9 on 3 and 338 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>Using the <code>partialling_out</code> function, you can get the
-residualised variable of interest (bill length) and of the first
-explanatory variable (bill_length), i.e. it would return the residuals
-of the following two regressions.</p>
+residualised variable of interest (<code>bill_length_mm</code>) and of
+the first explanatory variable (<code>bill_depth_mm</code>), i.e. it
+would return the residuals of the following two regressions.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
@@ -110,7 +110,8 @@ of the following two regressions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -189,28 +190,28 @@ of the following two regressions.</p>
               </tr></thead>
 <tbody>
 <tr>
-<td>0.3086093</td>
-                  <td>0.3536424</td>
+<td>0.31</td>
+                  <td>0.35</td>
                 </tr>
 <tr>
-<td>0.7086093</td>
-                  <td>-0.9463576</td>
+<td>0.71</td>
+                  <td>-0.95</td>
                 </tr>
 <tr>
-<td>1.5086093</td>
-                  <td>-0.3463576</td>
+<td>1.51</td>
+                  <td>-0.35</td>
                 </tr>
 <tr>
-<td>-2.0913907</td>
-                  <td>0.9536424</td>
+<td>-2.09</td>
+                  <td>0.95</td>
                 </tr>
 <tr>
-<td>0.5086093</td>
-                  <td>2.2536424</td>
+<td>0.51</td>
+                  <td>2.25</td>
                 </tr>
 <tr>
-<td>0.1086093</td>
-                  <td>-0.5463576</td>
+<td>0.11</td>
+                  <td>-0.55</td>
                 </tr>
 </tbody>
 </table>
@@ -229,7 +230,8 @@ original model.</p>
 <p>If <code>both</code> is set to <code>FALSE</code>, the function will
 return the actual Y values and the residualised X values.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">penguins</span>, both <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">penguins</span>, both <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -308,28 +310,28 @@ return the actual Y values and the residualised X values.</p>
               </tr></thead>
 <tbody>
 <tr>
-<td>39.1</td>
-                  <td>0.3536424</td>
+<td>39</td>
+                  <td>0.35</td>
                 </tr>
 <tr>
-<td>39.5</td>
-                  <td>-0.9463576</td>
+<td>40</td>
+                  <td>-0.95</td>
                 </tr>
 <tr>
-<td>40.3</td>
-                  <td>-0.3463576</td>
+<td>40</td>
+                  <td>-0.35</td>
                 </tr>
 <tr>
-<td>36.7</td>
-                  <td>0.9536424</td>
+<td>37</td>
+                  <td>0.95</td>
                 </tr>
 <tr>
-<td>39.3</td>
-                  <td>2.2536424</td>
+<td>39</td>
+                  <td>2.25</td>
                 </tr>
 <tr>
-<td>38.9</td>
-                  <td>-0.5463576</td>
+<td>39</td>
+                  <td>-0.55</td>
                 </tr>
 </tbody>
 </table>
@@ -348,7 +350,8 @@ return the actual Y values and the residualised X values.</p>
 <span>                      data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_fixest</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -427,28 +430,28 @@ return the actual Y values and the residualised X values.</p>
               </tr></thead>
 <tbody>
 <tr>
-<td>0.3086093</td>
-                  <td>0.3536424</td>
+<td>0.31</td>
+                  <td>0.35</td>
                 </tr>
 <tr>
-<td>0.7086093</td>
-                  <td>-0.9463576</td>
+<td>0.71</td>
+                  <td>-0.95</td>
                 </tr>
 <tr>
-<td>1.5086093</td>
-                  <td>-0.3463576</td>
+<td>1.51</td>
+                  <td>-0.35</td>
                 </tr>
 <tr>
-<td>-2.0913907</td>
-                  <td>0.9536424</td>
+<td>-2.09</td>
+                  <td>0.95</td>
                 </tr>
 <tr>
-<td>0.5086093</td>
-                  <td>2.2536424</td>
+<td>0.51</td>
+                  <td>2.25</td>
                 </tr>
 <tr>
-<td>0.1086093</td>
-                  <td>-0.5463576</td>
+<td>0.11</td>
+                  <td>-0.55</td>
                 </tr>
 </tbody>
 </table>
@@ -461,7 +464,10 @@ return the actual Y values and the residualised X values.</p>
 <span>                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_lfe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model_lfe</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_lfe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span></span>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_lfe</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <!-- preamble start -->
 
     <script>
@@ -540,28 +546,28 @@ return the actual Y values and the residualised X values.</p>
               </tr></thead>
 <tbody>
 <tr>
-<td>0.3086093</td>
-                  <td>0.3536424</td>
+<td>0.31</td>
+                  <td>0.35</td>
                 </tr>
 <tr>
-<td>0.7086093</td>
-                  <td>-0.9463576</td>
+<td>0.71</td>
+                  <td>-0.95</td>
                 </tr>
 <tr>
-<td>1.5086093</td>
-                  <td>-0.3463576</td>
+<td>1.51</td>
+                  <td>-0.35</td>
                 </tr>
 <tr>
-<td>-2.0913907</td>
-                  <td>0.9536424</td>
+<td>-2.09</td>
+                  <td>0.95</td>
                 </tr>
 <tr>
-<td>0.5086093</td>
-                  <td>2.2536424</td>
+<td>0.51</td>
+                  <td>2.25</td>
                 </tr>
 <tr>
-<td>0.1086093</td>
-                  <td>-0.5463576</td>
+<td>0.11</td>
+                  <td>-0.55</td>
                 </tr>
 </tbody>
 </table>
@@ -578,10 +584,10 @@ binned.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span>  <span class="va">res_bill_depth_mm</span>,</span>
-<span>               data <span class="op">=</span> <span class="va">res_fixest</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot_add.html" class="external-link">tinyplot_add</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>             type <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_fixest</span><span class="op">$</span><span class="va">qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
 <span>                      breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
@@ -592,8 +598,9 @@ binned.</p>
 <span><span class="va">res_qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">res_bill_depth_mm</span>, <span class="va">res_bill_length_mm</span><span class="op">)</span> <span class="op">~</span> <span class="va">qnt</span>,</span>
 <span>                     data <span class="op">=</span> <span class="va">res_fixest</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>         <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="va">resmodel</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot_add.html" class="external-link">tinyplot_add</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
+<span>             type <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="partialling_out_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 <p>Plotting all residuals is equivalent to the following approach in
 <code>fwlplot</code></p>
