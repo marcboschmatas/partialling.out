@@ -43,7 +43,9 @@ partialling_out.lm <- function(model, data = NULL,
   if (is.null(data)) {
     stop("No data has been provided")
   } # check data was provided
-
+  if (!("data.frame" %in% class(data))) {
+    stop("data input should be a data.frame")
+  } # check data was provided
   # get formula
   f <- formula(model)
   terms_obj <- terms(f)
@@ -56,6 +58,7 @@ partialling_out.lm <- function(model, data = NULL,
 
   # get residuals
   data <- data[, c(y, x, controls)]
+  original_nrow <- nrow(data) # for check later
   navec <- apply(data,
                  1,
                  function(x) any(is.na(x)))
@@ -66,10 +69,19 @@ partialling_out.lm <- function(model, data = NULL,
   if (is.null(weights) && !is.null(model$weights)) {
     warning("Original model is weighted, consider if weights should be added")
   }
-
+  if (!is.null(weights) && !is.numeric(weights)) {
+    stop("Weights should be a numeric vector")
+  }
+  if (!is.null(weights) && length(weights) != original_nrow) {
+    stop("Length of weights is not equal to number of observations")
+  }
   if (!is.null(weights)) {
     weights <- weights[!navec]
   }
+
+
+
+
   if (both) {
     # make formula for y on controls
     formulay <- as.formula(paste0(y, " ~ ", paste0(controls, collapse = " + ")))
@@ -103,6 +115,9 @@ partialling_out.fixest <- function(model, data = NULL,
   if (is.null(data)) {
     stop("No data has been provided")
   }  # check that a data object is supplied
+  if (!("data.frame" %in% class(data))) {
+    stop("data input should be a data.frame")
+  } # check data was provided
   f <- formula(model)
   terms_obj <- terms(f)
   y <- as.character(attr(terms_obj, "variables"))[2]
@@ -110,6 +125,7 @@ partialling_out.fixest <- function(model, data = NULL,
 
   terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
   data <- data[, c(y, terms_filter)]
+  original_nrow <- nrow(data) # for check later
   navec <- apply(data, 1, function(x) any(is.na(x))
   )
   data <- data[!navec, ]
@@ -142,10 +158,16 @@ partialling_out.fixest <- function(model, data = NULL,
   if (is.null(weights) && !is.null(model$weights)) {
     warning("Original model is weighted, consider if weights should be added")
   }
-
+  if (!is.null(weights) && !is.numeric(weights)) {
+    stop("Weights should be a numeric vector")
+  }
+  if (!is.null(weights) && length(weights) != original_nrow) {
+    stop("Length of weights is not equal to number of observations")
+  }
   if (!is.null(weights)) {
     weights <- weights[!navec]
   }
+
   if (both) {
     yformula <- paste(y, rhs2, sep = " ~ ")
     xformula <- paste(main_expvar, rhs2, sep = " ~ ")
@@ -184,6 +206,9 @@ partialling_out.felm <- function(model, data = NULL,
   if (is.null(data)) {
     stop("No data has been provided")
   } # check that a data object is supplied
+  if (!("data.frame" %in% class(data))) {
+    stop("data input should be a data.frame")
+  } # check data was provided
   f <- formula(model)
   terms_obj <- terms(f)
   y <- as.character(attr(terms_obj, "variables"))[2]
@@ -192,6 +217,7 @@ partialling_out.felm <- function(model, data = NULL,
   terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
   data <- data[, c(y, terms_filter)]
   navec <- apply(data, 1, function(x) any(is.na(x)))
+  original_nrow <- nrow(data) # later check
   data <- data[!navec, ]
   # make formulas for y and x
   # get indep vars, fe & inst vars
@@ -224,9 +250,18 @@ partialling_out.felm <- function(model, data = NULL,
   if (is.null(weights) && !is.null(model$weights)) {
     warning("Original model is weighted, consider if weights should be added")
   }
+
+  if (!is.null(weights) && !is.numeric(weights)) {
+    stop("Weights should be a numeric vector")
+  }
+  if (!is.null(weights) && length(weights) != original_nrow) {
+    stop("Length of weights is not equal to number of observations")
+  }
+
   if (!is.null(weights)) {
     weights <- weights[!navec]
   }
+
 
   if (both) {
     yformula <- paste(y, rhs2, sep = " ~ ")

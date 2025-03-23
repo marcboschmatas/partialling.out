@@ -20,8 +20,8 @@ works with `lm`, `felm` (`lfe`package) and `feols` (`fixest` package)
 following the Frisch-Waugh-Lovell theorem, as explained in Lovell
 ([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has
 already been implemented in
-\[`fwlplot`\]((<https://github.com/kylebutts/fwlplot>), this package
-offers three new characteristics.
+[`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers
+three new characteristics.
 
 - It uses an already existing model instead of a formula.
 

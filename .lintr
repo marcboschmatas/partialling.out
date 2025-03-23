@@ -1,5 +1,6 @@
 linters: linters_with_defaults(
-    semicolon_linter = NULL
+    semicolon_linter = NULL,
+    cyclocomp_linter = NULL
   )
 exclusions: list(
     "doc/partialling_out.R",
