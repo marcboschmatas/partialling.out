@@ -105,12 +105,14 @@ tt(head(res)) |>
 | 0.51               | 2.25              |
 | 0.11               | -0.55             |
 
+## Checking the results
+
 The Frisch-Waugh-Lovell theorem states that for a linear model
 
-$$ Y = X_1 \beta_1 + X_2\beta_2 + u$$ The coefficient $\beta_2$ will be
+$$ Y = X_1 \beta_1 + X_2\beta_2 + u $$ The coefficient $\beta_2$ will be
 equivalent to that in the regression
 
-$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u$$ Where $M_{X_1}Y$ are the
+$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u $$ Where $M_{X_1}Y$ are the
 residuals of the model
 
 $$ Y = X_1 \beta_1 + u $$
