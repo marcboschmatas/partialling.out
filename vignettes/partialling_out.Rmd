@@ -50,7 +50,8 @@ modelx <- lm(bill_depth_mm ~ species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 tt(head(res)) |>
-  format_tt(digits = 2)
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the coefficient of `bill_depth_mm` in the original model.
@@ -66,7 +67,8 @@ If `both` is set to `FALSE`, the function will return the actual Y values and th
 
 ```{r}
 tt(head(partialling_out(model, penguins, both = FALSE))) |>
-  format_tt(digits = 2)
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 
@@ -80,7 +82,8 @@ model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species,
 
 res_fixest <- partialling_out(model_fixest, data = penguins)
 tt(head(res_fixest)) |>
-  format_tt(digits = 2)
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 
@@ -94,7 +97,8 @@ res_lfe <- partialling_out(model_lfe, data = penguins)
 
 
 tt(head(res_lfe)) |>
-  format_tt(digits = 2)
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 
@@ -145,7 +149,9 @@ model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species + island,
                       data = penguins, cluster = ~species)
 
 
-tt(head(partialling_out(model_fixest, data = penguins, cluster = ~species)))
+tt(head(partialling_out(model_fixest, data = penguins, cluster = ~species))) |>
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 

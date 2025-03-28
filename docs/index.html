@@ -57,7 +57,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with <code>lm</code>, <code>felm</code> (<code>lfe</code>package) and <code>feols</code> (<code>fixest</code> package) following the Frisch-Waugh-Lovell theorem, as explained in Lovell (<a href="doi:10.3200/JECE.39.1.88-91">2008</a>). Whereas this algorithm has already been implemented in <a href="https://github.com/kylebutts/fwlplot" class="external-link"><code>fwlplot</code></a>, this package offers three new characteristics.</p>
+<p>Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with <code>lm</code>, <code>felm</code> (<code>lfe</code>package) and <code>feols</code> (<code>fixest</code> package) for applications of the Frisch-Waugh-Lovell theorem, as explained in Lovell (<a href="doi:10.3200/JECE.39.1.88-91">2008</a>). Whereas this algorithm has already been implemented in <a href="https://github.com/kylebutts/fwlplot" class="external-link"><code>fwlplot</code></a>, this package offers three new characteristics.</p>
 <ul>
 <li><p>It uses an already existing model instead of a formula.</p></li>
 <li><p>Works with <code>lm</code> and <code>felm</code> objects alongside <code>feols</code>.</p></li>
@@ -113,7 +113,9 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/style_tt.html" class="external-link">style_tt</a></span><span class="op">(</span>align <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th>res_bill_length_mm</th>
@@ -121,31 +123,37 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>0.3086093</td>
-<td>0.3536424</td>
+<td>0.31</td>
+<td>0.35</td>
 </tr>
 <tr class="even">
-<td>0.7086093</td>
-<td>-0.9463576</td>
+<td>0.71</td>
+<td>-0.95</td>
 </tr>
 <tr class="odd">
-<td>1.5086093</td>
-<td>-0.3463576</td>
+<td>1.51</td>
+<td>-0.35</td>
 </tr>
 <tr class="even">
-<td>-2.0913907</td>
-<td>0.9536424</td>
+<td>-2.09</td>
+<td>0.95</td>
 </tr>
 <tr class="odd">
-<td>0.5086093</td>
-<td>2.2536424</td>
+<td>0.51</td>
+<td>2.25</td>
 </tr>
 <tr class="even">
-<td>0.1086093</td>
-<td>-0.5463576</td>
+<td>0.11</td>
+<td>-0.55</td>
 </tr>
 </tbody>
 </table>
+<p>The Frisch-Waugh-Lovell theorem states that for a linear model</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><msub><mi>X</mi><mn>2</mn></msub><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> Y = X_1 \beta_1 + X_2\beta_2 + u</annotation></semantics></math> The coefficient <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mn>2</mn></msub><annotation encoding="application/x-tex">\beta_2</annotation></semantics></math> will be equivalent to that in the regression</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>Y</mi><mo>=</mo><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><msub><mi>X</mi><mn>2</mn></msub><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>u</mi></mrow><annotation encoding="application/x-tex"> M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u</annotation></semantics></math> Where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>Y</mi></mrow><annotation encoding="application/x-tex">M_{X_1}Y</annotation></semantics></math> are the residuals of the model</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> Y = X_1 \beta_1 + u </annotation></semantics></math></p>
+<p>And <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><msub><mi>X</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">M_{X_1}X_2</annotation></semantics></math> those of</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> X_2 = X_1 \beta_1 + u </annotation></semantics></math></p>
 <p>Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>

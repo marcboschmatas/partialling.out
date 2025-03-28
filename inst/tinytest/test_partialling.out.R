@@ -6,8 +6,9 @@ library(lfe)
 library(tinytest)
 library(partialling.out)
 
+penguins <- penguins
 set.seed(1234)
-# Expect error if no data is provided
+# Expect error if no data is provided ----
 
 expect_error({
               mod <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -27,7 +28,7 @@ expect_error({
   partialling_out(mod)})
 
 
-# expect error if data is not a data.frame
+# expect error if data is not a data.frame ----
 
 expect_error({
               mod <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -47,7 +48,7 @@ expect_error({
   partialling_out(mod, data = c(1,2,3))})
 
 
-# expect error if weights are non numeric
+# expect error if weights are non numeric ----
 
 expect_error({
   mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
@@ -64,7 +65,7 @@ expect_error({
   partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))})
 
 
-# expect error if weights are of the wrong length
+# expect error if weights are of the wrong length ----
 
 expect_error({
   mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
@@ -80,7 +81,7 @@ expect_error({
   partialling_out(mod, data = penguins, weights = c(1,2,3))})
 
 
-# expect error if only one covariate or no fixed effects
+# expect error if only one covariate or no fixed effects ----
 
 expect_error({
   mod <- lm(bill_length_mm ~  bill_depth_mm, data = penguins)
@@ -98,7 +99,7 @@ expect_error({
 
 
 
-# expect a warning if partial models are weighted but original model is not
+# expect a warning if partial models are weighted but original model is not ----
 
 
 expect_warning({
@@ -118,7 +119,7 @@ expect_warning({
 
 
 
-# expect a warning if the original model is weighted but partialling out is not
+# expect a warning if original model is weighted but partialling out is not ----
 
 
 expect_warning({
@@ -140,7 +141,11 @@ expect_warning({
               weights = penguins[!is.na(penguins$body_mass_g), ]$body_mass_g)
   partialling_out(mod, data = penguins[!is.na(penguins$body_mass_g), ])})
 
-# test that fwl theorem is properly applied
+
+# test for results validity ----
+
+## lm ----
+### test that fwl theorem is properly applied ----
 
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -153,13 +158,13 @@ resmod <- lm(res_bill_length_mm ~ res_bill_depth_mm,
 expect_equal(unname(signif(model$coefficients[2], 4)),
              unname(signif(resmod$coefficients[2], 4)))
 
-# check that a different random seed will provide the same results
+### check that a different random seed will provide the same results ----
 
 set.seed(5678)
 
 model2 <- lm(bill_length_mm ~  bill_depth_mm + species,
              data = penguins)
-res2 <- partialling_out(model, data = penguins)
+res2 <- partialling_out(model2, data = penguins)
 
 resmod2 <- lm(res_bill_length_mm ~ res_bill_depth_mm,
               data = res)
@@ -167,7 +172,28 @@ resmod2 <- lm(res_bill_length_mm ~ res_bill_depth_mm,
 expect_equal(unname(signif(resmod$coefficients[2], 4)),
              unname(signif(resmod2$coefficients[2], 4)))
 
-# test that fwl theorem is properly applied
+
+### check that random noise does not meaningfully change results ----
+
+
+penguins$bill_length_mm2 <- penguins$bill_length_mm + .Machine$double.eps
+penguins$bill_depth_mm2 <- penguins$bill_depth_mm + .Machine$double.eps
+
+
+model3 <- lm(bill_length_mm2 ~  bill_depth_mm2 + species,
+             data = penguins)
+res <- partialling_out(model3, data = penguins)
+
+resmod3 <- lm(res_bill_length_mm2 ~ res_bill_depth_mm2,
+              data = res)
+
+expect_equal(unname(signif(resmod$coefficients[2], 4)),
+             unname(signif(resmod3$coefficients[2], 4)))
+
+
+
+## feols ----
+### test that fwl theorem is properly applied ----
 
 set.seed(1234)
 
@@ -183,13 +209,13 @@ expect_equal(unname(signif(model$coefficients[1], 4)),
 
 
 
-# check that a different random seed will provide the same results
+### check that a different random seed will provide the same results ----
 
 set.seed(5678)
 
 model2 <- feols(bill_length_mm ~  bill_depth_mm | species,
                 data = penguins)
-res2 <- partialling_out(model, data = penguins)
+res2 <- partialling_out(model2, data = penguins)
 
 resmod2 <- lm(res_bill_length_mm ~ res_bill_depth_mm,
               data = res)
@@ -197,8 +223,25 @@ resmod2 <- lm(res_bill_length_mm ~ res_bill_depth_mm,
 expect_equal(unname(signif(resmod$coefficients[2], 4)),
              unname(signif(resmod2$coefficients[2], 4)))
 
+penguins$bill_length_mm2 <- penguins$bill_length_mm + .Machine$double.eps
+penguins$bill_depth_mm2 <- penguins$bill_depth_mm + .Machine$double.eps
 
-# test that fwl theorem is properly applied
+
+### check that random noise does not meaningfully change results ----
+
+model3 <- feols(bill_length_mm2 ~  bill_depth_mm2 + species,
+             data = penguins)
+res <- partialling_out(model3, data = penguins)
+
+resmod3 <- lm(res_bill_length_mm2 ~ res_bill_depth_mm2,
+              data = res)
+
+expect_equal(unname(signif(resmod$coefficients[2], 4)),
+             unname(signif(resmod3$coefficients[2], 4)))
+
+
+## felm ----
+### test that fwl theorem is properly applied ----
 
 set.seed(1234)
 
@@ -212,13 +255,13 @@ resmod <- lm(res_bill_length_mm ~ res_bill_depth_mm,
 expect_equal(unname(signif(model$coefficients[1], 4)),
              unname(signif(resmod$coefficients[2], 4)))
 
-# check that a different random seed will provide the same results
+### check that a different random seed will provide the same results ----
 
 set.seed(5678)
 
 model2 <- felm(bill_length_mm ~  bill_depth_mm | species,
                data = penguins)
-res2 <- partialling_out(model, data = penguins)
+res2 <- partialling_out(model2, data = penguins)
 
 resmod2 <- lm(res_bill_length_mm ~ res_bill_depth_mm,
               data = res)
@@ -227,8 +270,21 @@ expect_equal(unname(signif(resmod$coefficients[2], 4)),
              unname(signif(resmod2$coefficients[2], 4)))
 
 
+### check that random noise does not meaningfully change results ----
 
-# check that no NA value is returned
+model3 <- felm(bill_length_mm2 ~  bill_depth_mm2 + species,
+                data = penguins)
+res <- partialling_out(model3, data = penguins)
+
+resmod3 <- lm(res_bill_length_mm2 ~ res_bill_depth_mm2,
+              data = res)
+
+expect_equal(unname(signif(resmod$coefficients[2], 4)),
+             unname(signif(resmod3$coefficients[2], 4)))
+
+
+
+# check that no NA value is returned ----
 
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -266,7 +322,7 @@ expect_false(unique(navec))
 
 
 
-# check that no NaN value is returned
+# check that no NaN value is returned ----
 
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -303,7 +359,7 @@ navec <- apply(res, 1, function(x) any(is.nan(x)))
 expect_false(unique(navec))
 
 
-# check that no inf value is returned
+# check that no inf value is returned ----
 
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
@@ -341,12 +397,7 @@ expect_false(unique(navec))
 
 
 
-# test that it returns a data.frame
-
-
-
-
-
+# test that it returns a data.frame----
 
 
 
@@ -379,7 +430,7 @@ res <- partialling_out(model, data = penguins)
 expect_true("data.frame" %in% class(res))
 
 
-# test that it returns a data.frame of two columns
+# test that it returns a data.frame of two columns ----
 
 
 
@@ -411,10 +462,9 @@ res <- partialling_out(model, data = penguins)
 
 expect_true(ncol(res) == 2)
 
-# check that the names start with res_
+# check that the names start with res_ ----
 
 
-# test that it returns a data.frame of two columns
 
 
 
@@ -443,7 +493,7 @@ res <- partialling_out(model, data = penguins)
 expect_true(unique(startsWith(colnames(res), "res")))
 
 
-# test that the two columns are numeric
+# test that the two columns are numeric ----
 
 
 
@@ -471,5 +521,8 @@ res <- partialling_out(model, data = penguins)
 
 
 expect_true(unique(sapply(res, is.numeric)))
+
+
+
 
 

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with `lm`, `felm` (`lfe`package) and `feols`  (`fixest` package) following the Frisch-Waugh-Lovell theorem, as explained in Lovell ([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has already been implemented in [`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers three new characteristics.
+Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with `lm`, `felm` (`lfe`package) and `feols`  (`fixest` package) for applications of the Frisch-Waugh-Lovell theorem, as explained in Lovell ([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has already been implemented in [`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers three new characteristics.
 
 - It uses an already existing model instead of a formula.
 
@@ -72,8 +72,25 @@ modelx <- lm(bill_depth_mm ~ species, data = penguins)
 ```{r}
 res <- partialling_out(model, data = penguins)
 
-tt(head(res))
+tt(head(res)) |>
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
+
+The Frisch-Waugh-Lovell theorem states that for a linear model
+
+$$ Y = X_1 \beta_1 + X_2\beta_2 + u$$
+The coefficient $\beta_2$ will be equivalent to that in the regression
+
+$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u$$
+Where $M_{X_1}Y$ are the residuals of the model
+
+$$ Y = X_1 \beta_1 + u $$
+
+And $M_{X_1}X_2$ those of 
+
+
+$$ X_2 = X_1 \beta_1 + u $$
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the coefficient of `bill_depth_mm` in the original model.
 

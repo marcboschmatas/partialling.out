@@ -17,8 +17,8 @@ coverage](https://codecov.io/gh/marcboschmatas/partialling.out/graph/badge.svg)]
 Partialling out is a package that allows to generate residualised
 variables of already existing linear or fixed effects models. So far it
 works with `lm`, `felm` (`lfe`package) and `feols` (`fixest` package)
-following the Frisch-Waugh-Lovell theorem, as explained in Lovell
-([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has
+for applications of the Frisch-Waugh-Lovell theorem, as explained in
+Lovell ([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has
 already been implemented in
 [`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers
 three new characteristics.
@@ -91,17 +91,33 @@ modelx <- lm(bill_depth_mm ~ species, data = penguins)
 ``` r
 res <- partialling_out(model, data = penguins)
 
-tt(head(res))
+tt(head(res)) |>
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
 ```
 
 | res_bill_length_mm | res_bill_depth_mm |
 |--------------------|-------------------|
-| 0.3086093          | 0.3536424         |
-| 0.7086093          | -0.9463576        |
-| 1.5086093          | -0.3463576        |
-| -2.0913907         | 0.9536424         |
-| 0.5086093          | 2.2536424         |
-| 0.1086093          | -0.5463576        |
+| 0.31               | 0.35              |
+| 0.71               | -0.95             |
+| 1.51               | -0.35             |
+| -2.09              | 0.95              |
+| 0.51               | 2.25              |
+| 0.11               | -0.55             |
+
+The Frisch-Waugh-Lovell theorem states that for a linear model
+
+$$ Y = X_1 \beta_1 + X_2\beta_2 + u$$ The coefficient $\beta_2$ will be
+equivalent to that in the regression
+
+$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u$$ Where $M_{X_1}Y$ are the
+residuals of the model
+
+$$ Y = X_1 \beta_1 + u $$
+
+And $M_{X_1}X_2$ those of
+
+$$ X_2 = X_1 \beta_1 + u $$
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model
 `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the
