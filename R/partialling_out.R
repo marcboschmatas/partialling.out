@@ -1,5 +1,5 @@
 
-
+# nolint start
 #' Creates a data.frame of the residualised main explanatory variable and,
 #' if wanted, variable of interest of a linear or fixed effects model
 #'
@@ -28,10 +28,6 @@
 #'                data = penguins)
 #' partial_df <- partialling_out(model, penguins, both = TRUE)
 #' }
-#' @export
-partialling_out <- function(model, data, weights, both, ...) {
-  UseMethod("partialling_out")
-}
 #' @srrstats {G2.0} *Implement assertions on lengths of inputs, particularly through asserting that inputs expected to be single- or multi-valued are indeed so.*
 #' @srrstats {G2.0a} *Provide explicit secondary documentation of any expectations on lengths of inputs*
 #' @srrstats {G2.1} *Implement assertions on types of inputs (see the initial point on nomenclature above).*
@@ -81,6 +77,12 @@ partialling_out <- function(model, data, weights, both, ...) {
 #' @srrstats {EA6.0b} *Dimensions of tabular objects*
 #' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
 #' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
+#' @export
+# nolint end
+partialling_out <- function(model, data, weights, both, ...) {
+  UseMethod("partialling_out")
+}
+
 #' @importFrom stats formula
 #' @importFrom stats as.formula
 #' @importFrom stats lm

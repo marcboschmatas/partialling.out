@@ -7,7 +7,7 @@
 #' standards remain somewhere within your code.
 #' (These comments may be deleted at any time.)
 #'
-#' @srrstatsVerbose TRUE
+#' @srrstatsVerbose FALSE
 #'
 #' @srrstats {G1.0} *Statistical Software should list at least one primary reference from published academic literature.*
 #' @srrstats {G1.1} *Statistical Software should document whether the algorithm(s) it implements are:* - *The first implementation of a novel algorithm*; or - *The first implementation within **R** of an algorithm which has previously been implemented in other languages or contexts*; or - *An improvement on other implementations of similar algorithms in **R***.
