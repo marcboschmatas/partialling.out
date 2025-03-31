@@ -116,5 +116,6 @@ NULL
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.13} *Statistical Software should implement appropriate checks for missing data as part of initial pre-processing prior to passing data to analytic algorithms.*
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-
+#' @noRd
+NULL
 
