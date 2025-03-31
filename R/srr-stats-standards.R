@@ -8,10 +8,7 @@
 #' (These comments may be deleted at any time.)
 #'
 #' @srrstatsVerbose FALSE
-#' @srrstats {EA1.0} *Identify one or more target audiences for whom the software is intended*
-#' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
-#' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
-#' @srrstats {EA1.3} *Identify the kinds of data each function is intended to accept as input*
+#'
 #' @srrstats {G1.0} *Statistical Software should list at least one primary reference from published academic literature.*
 #' @srrstats {G1.1} *Statistical Software should document whether the algorithm(s) it implements are:* - *The first implementation of a novel algorithm*; or - *The first implementation within **R** of an algorithm which has previously been implemented in other languages or contexts*; or - *An improvement on other implementations of similar algorithms in **R***.
 #' @srrstats {G1.2} *Statistical Software should include a* Life Cycle Statement *describing current and anticipated future states of development.*
@@ -119,6 +116,5 @@ NULL
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.13} *Statistical Software should implement appropriate checks for missing data as part of initial pre-processing prior to passing data to analytic algorithms.*
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @noRd
 NULL
 

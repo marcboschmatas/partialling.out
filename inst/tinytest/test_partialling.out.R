@@ -395,15 +395,8 @@ navec <- apply(res, 1, function(x) any(is.infinite(x)))
 
 expect_false(unique(navec))
 
-# nolint start
-#' @srrstats {EA6.0} *Return values from all functions should be tested, including tests for the following characteristics:*
-#' @srrstats {EA6.0a} *Classes and types of objects*
-#' @srrstats {EA6.0b} *Dimensions of tabular objects*
-#' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
-#' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
-NULL
 
-# nolint end
+
 # test that it returns a data.frame----
 
 
