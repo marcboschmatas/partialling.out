@@ -57,10 +57,6 @@
 #' @srrstats {G5.9} **Noise susceptibility tests** *Packages should test for expected stochastic behaviour, such as through the following conditions:*
 #' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results*
 #' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results*
-#' @srrstats {EA1.0} *Identify one or more target audiences for whom the software is intended*
-#' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
-#' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
-#' @srrstats {EA1.3} *Identify the kinds of data each function is intended to accept as input*
 #' @srrstats {EA2.6} *Routines should appropriately process vector data regardless of additional attributes*
 #' @srrstats {EA3.0} *The algorithmic components of EDA Software should enable automated extraction and/or reporting of statistics as some sufficiently "meta" level (such as variable or model selection), for which previous or reference implementations require manual intervention.*
 #' @srrstats {EA3.1} *EDA software should enable standardised comparison of inputs, processes, models, or outputs which previous or reference implementations otherwise only enable in some comparably unstandardised form.*
@@ -72,11 +68,6 @@
 #' @srrstats {EA5.0b} *Default colour schemes, which should be carefully constructed to ensure accessibility.*
 #' @srrstats {EA5.1} *Any explicit specifications of typefaces which override default values provided through other packages (including the `graphics` package) should consider accessibility*
 #' @srrstats {EA5.2} *Screen-based output should never rely on default print formatting of `numeric` types, rather should also use some version of `round(., digits)`, `formatC`, `sprintf`, or similar functions for numeric formatting according the parameter described in* **EA4.1**.
-#' @srrstats {EA6.0} *Return values from all functions should be tested, including tests for the following characteristics:*
-#' @srrstats {EA6.0a} *Classes and types of objects*
-#' @srrstats {EA6.0b} *Dimensions of tabular objects*
-#' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
-#' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
 #' @export
 # nolint end
 partialling_out <- function(model, data, weights, both, ...) {
