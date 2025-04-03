@@ -9,3 +9,6 @@ First version
 
 Updated test structure and documentation to comply with rOpensci standards
 
+## partialling.out 0.1.0
+
+Modified the function so that it returns a weights vector as a column of the result df

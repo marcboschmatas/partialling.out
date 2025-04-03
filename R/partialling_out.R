@@ -12,11 +12,15 @@
 #' Will accept lm, felm (lfe package), and feols (fixest package) objects
 #' @title partialling_out: partialling out variable of interest and main
 #' @param model object for which we want to residualise variables
-#' @param data data.frame used in the original model
+#' @param data data.frame used in the original model. Using different data will
+#' return unexpected results or an error.
 #' @param weights a numeric vector for weighting the partial models
 #' @param both if `TRUE` will residualise both the variable of interest and the
 #' first explanatory variable in the model. If `FALSE`, only the latter.
 #' Set to `TRUE` by default
+#' @param na.rm if `TRUE` will remove observations with NA before any models are
+#' run. If `FALSE`, the underlying `lm`, `feols`, or `felm` will remove NA
+#' values but errors may arise if weights are used.
 #' @param ... Any other lm, feols, or felm parameters that will be passed to the
 #' partial regressions
 #' @returns a data.frame with the (residualised) variable of interest and
@@ -33,7 +37,9 @@
 #' @srrstats {G2.1} *Implement assertions on types of inputs (see the initial point on nomenclature above).*
 #' @srrstats {G2.1a} *Provide explicit secondary documentation of expectations on data types of all vector inputs.*
 #' @srrstats {G2.14} *Where possible, all functions should provide options for users to specify how to handle missing (`NA`) data, with options minimally including:*
+#' @srrstats {G2.13} *Statistical Software should implement appropriate checks for missing data as part of initial pre-processing prior to passing data to analytic algorithms.*
 #' @srrstats {G2.14a} *error on missing data*
+#' @srrstats {G2.14b} *ignore missing data with default warnings or messages issued*
 #' @srrstats {G2.15} *Functions should never assume non-missingness, and should never pass data with potential missing values to any base routines with default `na.rm = FALSE`-type parameters (such as [`mean()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html), [`sd()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/sd.html) or [`cor()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html)).*
 #' @srrstats {G2.16} *All functions should also provide options to handle undefined values (e.g., `NaN`, `Inf` and `-Inf`), including potentially ignoring or removing such values.*
 #' @srrstats {G3.0} *Statistical software should never compare floating point numbers for equality. All numeric equality comparisons should either ensure that they are made between integers, or use appropriate tolerances for approximate equality.*
@@ -57,6 +63,7 @@
 #' @srrstats {G5.9} **Noise susceptibility tests** *Packages should test for expected stochastic behaviour, such as through the following conditions:*
 #' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results*
 #' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results*
+#' @srrstats {G2.10} *Software should ensure that extraction or filtering of single columns from tabular inputs should not presume any particular default behaviour, and should ensure all column-extraction operations behave consistently regardless of the class of tabular data used as input.*
 #' @srrstats {EA1.0} *Identify one or more target audiences for whom the software is intended*
 #' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
 #' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
@@ -77,9 +84,11 @@
 #' @srrstats {EA6.0b} *Dimensions of tabular objects*
 #' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
 #' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
+#' @srrstats {EA5.3} *Column-based summary statistics should always indicate the `storage.mode`, `class`, or equivalent defining attribute of each column.*
+
 #' @export
 # nolint end
-partialling_out <- function(model, data, weights, both, ...) {
+partialling_out <- function(model, data, weights, both, na.rm, ...) {
   UseMethod("partialling_out")
 }
 
@@ -89,13 +98,14 @@ partialling_out <- function(model, data, weights, both, ...) {
 #' @importFrom stats terms
 #' @export
 partialling_out.lm <- function(model, data = NULL,
-                               weights = NULL, both = TRUE, ...) {
+                               weights = NULL, both = TRUE,
+                               na.rm = TRUE, ...) {
   if (is.null(data)) {
     stop("No data has been provided")
   } # check data was provided
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
-  } # check data was provided
+  } # check data is a df
   # get formula
   f <- formula(model)
   terms_obj <- terms(f)
@@ -106,13 +116,18 @@ partialling_out.lm <- function(model, data = NULL,
     stop("No control variables found in the model.")
   }
 
-  # get residuals
+  # clean
   data <- data[, c(y, x, controls)]
   original_nrow <- nrow(data) # for check later
-  navec <- apply(data,
-                 1,
-                 function(x) any(is.na(x)))
-  data <- data[!navec, ]
+  # remove nas
+  if (na.rm) {
+    navec <- apply(data,
+                   1,
+                   function(x) any(is.na(x)))
+    data <- data[!navec, ]
+  }else {
+    warning("na.rm is set to FALSE and results depend on lm() na_action")
+  }
   if (!is.null(weights) && is.null(model$weights)) {
     warning("Original model is not weighted, consider if weights are necessary")
   }
@@ -125,7 +140,7 @@ partialling_out.lm <- function(model, data = NULL,
   if (!is.null(weights) && length(weights) != original_nrow) {
     stop("Length of weights is not equal to number of observations")
   }
-  if (!is.null(weights)) {
+  if (!is.null(weights) && na.rm) {
     weights <- weights[!navec]
   }
 
@@ -150,6 +165,10 @@ partialling_out.lm <- function(model, data = NULL,
                         "x" = resx)
     colnames(resdf) <- c(y, paste0("res_", x))
   }
+  if (!is.null(weights)) {
+    resdf <- cbind(resdf, weights)
+    colnames(resdf)[3] <- "weights"
+  }
 
   return(resdf)
 }
@@ -160,7 +179,8 @@ partialling_out.lm <- function(model, data = NULL,
 #' @importFrom fixest feols
 #' @export
 partialling_out.fixest <- function(model, data = NULL,
-                                   weights = NULL, both = TRUE, ...) {
+                                   weights = NULL, both = TRUE,
+                                   na.rm = TRUE, ...) {
   # get data df - filter missing obs
   if (is.null(data)) {
     stop("No data has been provided")
@@ -174,11 +194,18 @@ partialling_out.fixest <- function(model, data = NULL,
   rhs <-  attr(terms_obj, "term.labels")
 
   terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
+  # make sure no "0" or similar terms are passed to filtering function
+  terms_filter <- terms_filter[terms_filter %in% colnames(data)]
   data <- data[, c(y, terms_filter)]
   original_nrow <- nrow(data) # for check later
-  navec <- apply(data, 1, function(x) any(is.na(x))
-  )
-  data <- data[!navec, ]
+  # remove NA if needed
+  if (na.rm) {
+    navec <- apply(data, 1, function(x) any(is.na(x))
+    )
+    data <- data[!navec, ]
+  }else {
+    warning("na.rm is set to FALSE and results depend on feols() na_action")
+  }
   # make formulas for y and x
   # get indep vars, fe & inst vars
   rhs_split <- unlist(strsplit(rhs, "\\|"))
@@ -214,7 +241,7 @@ partialling_out.fixest <- function(model, data = NULL,
   if (!is.null(weights) && length(weights) != original_nrow) {
     stop("Length of weights is not equal to number of observations")
   }
-  if (!is.null(weights)) {
+  if (!is.null(weights) && na.rm) {
     weights <- weights[!navec]
   }
 
@@ -240,6 +267,10 @@ partialling_out.fixest <- function(model, data = NULL,
                         "x" = xres)
     colnames(resdf) <- c(y, paste0("res_", main_expvar))
   }
+  if (!is.null(weights)) {
+    resdf <- cbind(resdf, weights)
+    colnames(resdf)[3] <- "weights"
+  }
 
 
   return(resdf)
@@ -251,7 +282,8 @@ partialling_out.fixest <- function(model, data = NULL,
 #' @importFrom lfe felm
 #' @export
 partialling_out.felm <- function(model, data = NULL,
-                                 weights = NULL, both = TRUE, ...) {
+                                 weights = NULL, both = TRUE,
+                                 na.rm = TRUE, ...) {
   # get data df - filter missing obs
   if (is.null(data)) {
     stop("No data has been provided")
@@ -265,10 +297,18 @@ partialling_out.felm <- function(model, data = NULL,
   rhs <-  attr(terms_obj, "term.labels")
 
   terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
+  # make sure no "0" or similar terms are passed to filtering function
+  terms_filter <- terms_filter[terms_filter %in% colnames(data)]
   data <- data[, c(y, terms_filter)]
-  navec <- apply(data, 1, function(x) any(is.na(x)))
   original_nrow <- nrow(data) # later check
-  data <- data[!navec, ]
+  # filter data if needed
+  if (na.rm) {
+    navec <- apply(data, 1, function(x) any(is.na(x)))
+
+    data <- data[!navec, ]
+  }else {
+    warning("na.rm is set to FALSE and results depend on felm() na_action")
+  }
   # make formulas for y and x
   # get indep vars, fe & inst vars
   rhs_split <- unlist(strsplit(rhs, "\\|"))
@@ -333,6 +373,10 @@ partialling_out.felm <- function(model, data = NULL,
     resdf <- data.frame("y" = data[[y]],
                         "x" = xres)
     colnames(resdf) <- c(y, paste0("res_", main_expvar))
+  }
+  if (!is.null(weights)) {
+    resdf <- cbind(resdf, weights)
+    colnames(resdf)[3] <- "weights"
   }
   return(resdf)
 }

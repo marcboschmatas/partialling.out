@@ -37,10 +37,8 @@ NULL
 #' All expected outcomes are data.frames
 #' @srrstatsNA {G2.4e} *explicit conversion from factor via `as...()` functions*
 #' All expected outcomes are data.frames
-#' @srrstatsNA {G2.14b} *ignore missing data with default warnings or messages issued*
-#' Missing data will throw an error as per G2.14a
 #' @srrstatsNA {G2.14c} *replace missing data with appropriately imputed values*
-#' Missing data will throw an error as per G2.14a
+#' Missing data will throw an error as per G2.14a or a warning as per G2.14b
 #' @srrstatsNA {G3.1} *Statistical software which relies on covariance calculations should enable users to choose between different algorithms for calculating covariances, and should not rely solely on covariances from the `stats::cov` function.*
 #' No reliance on covariance calculations
 #' @srrstatsNA {G3.1a} *The ability to use arbitrarily specified covariance methods should be documented (typically in examples or vignettes).*
@@ -68,8 +66,6 @@ NULL
 #' No extended test structure expected
 #' @srrstatsNA {G5.12} *Any conditions necessary to run extended tests such as platform requirements, memory, expected runtime, and artefacts produced that may need manual inspection, should be described in developer documentation such as a `CONTRIBUTING.md` or `tests/README.md` file.*
 #' No extended test structure expected
-#' @srrstatsNA {EA5.3} *Column-based summary statistics should always indicate the `storage.mode`, `class`, or equivalent defining attribute of each column.*
-#' Function returns a data.frame with two numeric variables - summary statistics should behave as expected in base R should user calculate them
 #' @srrstatsNA {EA5.4} *All visualisations should ensure values are rounded sensibly (for example, via `pretty()` function).*
 #' No visualisations as outputs
 #' @srrstatsNA {EA5.5} *All visualisations should include units on all axes where such are specified or otherwise obtainable from input data or other routines.*
@@ -108,13 +104,9 @@ NULL
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.9} *Software should issue diagnostic messages for type conversion in which information is lost (such as conversion of variables from factor to character; standardisation of variable names; or removal of meta-data such as those associated with [`sf`-format](https://r-spatial.github.io/sf/) data) or added (such as insertion of variable or column names where none were provided).*
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.10} *Software should ensure that extraction or filtering of single columns from tabular inputs should not presume any particular default behaviour, and should ensure all column-extraction operations behave consistently regardless of the class of tabular data used as input.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.13} *Statistical Software should implement appropriate checks for missing data as part of initial pre-processing prior to passing data to analytic algorithms.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
+#' list columns aren't accepted by lm, felm, or feols, so the model should throw an error
 NULL
 

@@ -9,7 +9,7 @@ if wanted, variable of interest of a linear or fixed effects model"></head><body
 
     <a class="navbar-brand me-2" href="../index.html">partialling.out</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,7 @@ if wanted, variable of interest of a linear or fixed effects model</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">partialling_out</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">both</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">partialling_out</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">both</span>, <span class="va">na.rm</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,6 +69,12 @@ if wanted, variable of interest of a linear or fixed effects model</p>
 <dd><p>if <code>TRUE</code> will residualise both the variable of interest and the
 first explanatory variable in the model. If <code>FALSE</code>, only the latter.
 Set to <code>TRUE</code> by default</p></dd>
+
+
+<dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
+<dd><p>if <code>TRUE</code> will remove observations with NA before any models are
+run. If <code>FALSE</code>, the underlying <code>lm</code>, <code>feols</code>, or <code>felm</code> will remove NA
+values but errors may arise if weights are used.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

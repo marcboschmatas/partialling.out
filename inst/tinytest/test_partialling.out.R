@@ -430,7 +430,7 @@ res <- partialling_out(model, data = penguins)
 expect_true("data.frame" %in% class(res))
 
 
-# test that it returns a data.frame of two columns ----
+# test that it returns a data.frame of two columns if unweighted ----
 
 
 
@@ -462,7 +462,47 @@ res <- partialling_out(model, data = penguins)
 
 expect_true(ncol(res) == 2)
 
-# check that the names start with res_ ----
+
+# check that it returns three columns if weighted ----
+
+
+model <- lm(bill_length_mm ~  bill_depth_mm + species,
+            data = penguins,
+            weights = penguins$body_mass_g)
+res <- partialling_out(model, data = penguins,
+                       weights = penguins$body_mass_g)
+
+expect_true(ncol(res) == 3)
+
+
+
+model <- feols(bill_length_mm ~  bill_depth_mm | species,
+               data = penguins,
+               weights = penguins$body_mass_g)
+res <- partialling_out(model, data = penguins,
+                       weights = penguins$body_mass_g)
+
+
+
+
+expect_true(ncol(res) == 3)
+
+
+
+model <- felm(bill_length_mm ~  bill_depth_mm | species,
+              data = penguins[!is.na(penguins$body_mass_g), ],
+              weights = penguins[!is.na(penguins$body_mass_g), ]$body_mass_g)
+
+
+res <- partialling_out(model, data = penguins[!is.na(penguins$body_mass_g), ],
+                       weights = penguins[!is.na(penguins$body_mass_g), ]$body_mass_g) # nolint
+
+
+
+
+expect_true(ncol(res) == 3)
+
+# check that the names start with res_ in unweighted models ----
 
 
 
@@ -524,5 +564,93 @@ expect_true(unique(sapply(res, is.numeric)))
 
 
 
+# test that error will occur if weights are included but na are not omitted
+
+
+
+
+model <- lm(bill_length_mm ~  bill_depth_mm + species,
+            data = penguins,
+            weights = penguins$body_mass_g)
+
+
+expect_error(partialling_out(model, data = penguins,
+                             weights = penguins$body_mass_g,
+                             na.rm = FALSE))
+
+
+model <- feols(bill_length_mm ~  bill_depth_mm | species,
+               data = penguins,
+               weights = penguins$body_mass_g)
+
+
+expect_error(partialling_out(model, data = penguins,
+                             weights = penguins$body_mass_g,
+                             na.rm = FALSE))
+
+
+df <- penguins[!is.na(penguins$body_mass_g), ]
+
+model <- felm(bill_length_mm ~  bill_depth_mm | species,
+              data = df,
+              weights = df$body_mass_g)
+
+
+expect_error(partialling_out(model,
+                             data = df,
+                             weights = df$body_mass_g,
+                             na.rm = FALSE))
+
+
+
+# test that no error will return if "0" elements are included in felm ----
+
+
+model <- felm(bill_length_mm ~ bill_depth_mm | species | 0 | species,
+              data = penguins)
+
+expect_silent(partialling_out(model,
+                              data = penguins))
+
+# test that column summaries will behave as expected ----
+
+
+
+model <- lm(bill_length_mm ~  bill_depth_mm + species,
+            data = penguins)
+res <- partialling_out(model, data = penguins)
+
+summaries <- lapply(res, summary)
+
+sumnames <- unique(unlist(lapply(summaries, names)))
+
+expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
+                         "Mean", "3rd Qu.", "Max."))
+
+model <- feols(bill_length_mm ~  bill_depth_mm | species,
+               data = penguins)
+res <- partialling_out(model, data = penguins)
+
+
+summaries <- lapply(res, summary)
+
+sumnames <- unique(unlist(lapply(summaries, names)))
+
+expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
+                         "Mean", "3rd Qu.", "Max."))
+
+
+
+model <- felm(bill_length_mm ~  bill_depth_mm | species,
+              data = penguins)
+res <- partialling_out(model, data = penguins)
+
+
+summaries <- lapply(res, summary)
+
+sumnames <- unique(unlist(lapply(summaries, names)))
+
+expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
+                         "Mean", "3rd Qu.", "Max."))
 
 

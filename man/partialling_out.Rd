@@ -4,18 +4,23 @@
 \alias{partialling_out}
 \title{partialling_out: partialling out variable of interest and main}
 \usage{
-partialling_out(model, data, weights, both, ...)
+partialling_out(model, data, weights, both, na.rm, ...)
 }
 \arguments{
 \item{model}{object for which we want to residualise variables}
 
-\item{data}{data.frame used in the original model}
+\item{data}{data.frame used in the original model. Using different data will
+return unexpected results or an error.}
 
 \item{weights}{a numeric vector for weighting the partial models}
 
 \item{both}{if \code{TRUE} will residualise both the variable of interest and the
 first explanatory variable in the model. If \code{FALSE}, only the latter.
 Set to \code{TRUE} by default}
+
+\item{na.rm}{if \code{TRUE} will remove observations with NA before any models are
+run. If \code{FALSE}, the underlying \code{lm}, \code{feols}, or \code{felm} will remove NA
+values but errors may arise if weights are used.}
 
 \item{...}{Any other lm, feols, or felm parameters that will be passed to the
 partial regressions}

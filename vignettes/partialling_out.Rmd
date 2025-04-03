@@ -72,6 +72,48 @@ tt(head(partialling_out(model, penguins, both = FALSE))) |>
 ```
 
 
+
+### Weighted models
+
+
+If `weights` are specified in `partialling_out` they will be used to weight the underlying partial models. The weights will also be returned as a column in the result data.frame. If the original model is weighted but the partial models aren't, the function will throw a warning (also if the original model is not weighted but partial models are).
+
+
+```{r}
+model <- lm(bill_length_mm ~  bill_depth_mm + species,
+            data = penguins,
+            weights = penguins$body_mass_g)
+res <- partialling_out(model, data = penguins,
+                       weights = penguins$body_mass_g)
+
+
+tt(head(res)) |>
+  format_tt(digits = 2) |>
+  style_tt(align = "c")
+```
+
+
+
+Note that, for the FWL theorem to hold, if the partial models are weighted, the linear model between the two residualised variables must be weighted as well.
+
+
+```{r}
+unweighted_model <- lm(res_bill_length_mm ~ res_bill_depth_mm, data = res)
+
+weighted_model <- lm(res_bill_length_mm ~  res_bill_depth_mm,
+                     weights = res$weights, data = res)
+
+
+data.frame("original model" = model$coefficients[2],
+        "unweighted model" = unweighted_model$coefficients[2],
+        "weighted_model" = weighted_model$coefficients[2]) |> 
+  tt() |>
+  format_tt(digits = 4) |>
+  style_tt(align = "c")
+
+```
+
+
 ## Fixed effects models
 As stated, the model will also work with `feols` or `felm` models
 ```{r}
