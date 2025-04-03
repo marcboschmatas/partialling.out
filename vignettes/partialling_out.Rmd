@@ -105,8 +105,8 @@ weighted_model <- lm(res_bill_length_mm ~  res_bill_depth_mm,
 
 
 data.frame("original model" = model$coefficients[2],
-        "unweighted model" = unweighted_model$coefficients[2],
-        "weighted_model" = weighted_model$coefficients[2]) |> 
+           "unweighted model" = unweighted_model$coefficients[2],
+           "weighted_model" = weighted_model$coefficients[2]) |>
   tt() |>
   format_tt(digits = 4) |>
   style_tt(align = "c")
