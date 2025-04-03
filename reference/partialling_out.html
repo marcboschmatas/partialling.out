@@ -46,7 +46,7 @@ if wanted, variable of interest of a linear or fixed effects model</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">partialling_out</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">both</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">partialling_out</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">both</span>, <span class="va">na.rm</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,7 +58,8 @@ if wanted, variable of interest of a linear or fixed effects model</p>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>data.frame used in the original model</p></dd>
+<dd><p>data.frame used in the original model. Using different data will
+return unexpected results or an error.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
@@ -69,6 +70,12 @@ if wanted, variable of interest of a linear or fixed effects model</p>
 <dd><p>if <code>TRUE</code> will residualise both the variable of interest and the
 first explanatory variable in the model. If <code>FALSE</code>, only the latter.
 Set to <code>TRUE</code> by default</p></dd>
+
+
+<dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
+<dd><p>if <code>TRUE</code> will remove observations with NA before any models are
+run. If <code>FALSE</code>, the underlying <code>lm</code>, <code>feols</code>, or <code>felm</code> will remove NA
+values but errors may arise if weights are used.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
