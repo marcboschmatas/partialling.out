@@ -87,8 +87,8 @@ partialling_out.lm <- function(model, data = NULL,
 
   # prepare partial formulas and filter terms ----
 
-  formulas <- partialling.out::prepare_formula(model = model,
-                                               both = both)
+  formulas <- prepare_formula(model = model,
+                              both = both)
 
   # check data is provided and is a data.frame ----
 
@@ -181,8 +181,8 @@ partialling_out.fixest <- function(model, data = NULL,
                                    na.rm = TRUE, ...) {
   # prepare partial formulas and filter terms ----
 
-  formulas <- partialling.out::prepare_formula(model = model,
-                                               both = both)
+  formulas <- prepare_formula(model = model,
+                              both = both)
 
   # check data is provided and is a data.frame ----
 
@@ -282,8 +282,8 @@ partialling_out.felm <- function(model, data = NULL,
 
   # prepare partial formulas and filter terms ----
 
-  formulas <- partialling.out::prepare_formula(model = model,
-                                               both = both)
+  formulas <- prepare_formula(model = model,
+                              both = both)
 
   # check data is provided and is a data.frame ----
 

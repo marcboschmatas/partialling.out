@@ -2,7 +2,7 @@
 # nolint start
 #' Extracts the partial formulas from the original model
 #' plus a vector of all terms to filter the model data.frame before filtering
-#' This is an internal function
+#' This is an internal function, should not be used on its own
 #'
 #'
 #' Will accept lm, felm (lfe package), and feols (fixest package) objects
@@ -28,10 +28,6 @@ prepare_formula <- function(model, both) {
 #' @importFrom stats formula
 #' @importFrom stats terms
 prepare_formula.lm <- function(model, both = TRUE) {
-
-  if (!("lm" %in% class(model))) {
-    stop("model object must be of class lm, fixest, or felm")
-  }
   # extract formula from models & terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)
@@ -71,10 +67,6 @@ prepare_formula.lm <- function(model, both = TRUE) {
 #' @importFrom stats formula
 #' @importFrom stats terms
 prepare_formula.fixest <- function(model, both = TRUE) {
-
-  if (!("feols" %in% class(model))) {
-    stop("model object must be of class lm, fixest, or felm")
-  }
   # extract formula from model and terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)
@@ -142,10 +134,6 @@ prepare_formula.fixest <- function(model, both = TRUE) {
 #' @importFrom stats formula
 #' @importFrom stats terms
 prepare_formula.felm <- function(model, both = TRUE) {
-  if (!("felm" %in% class(model))) {
-    stop("model object must be of class lm, fixest, or felm")
-  }
-
   # extract formula from model and terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)

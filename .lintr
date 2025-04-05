@@ -1,7 +1,8 @@
 linters: linters_with_defaults(
     semicolon_linter = NULL,
     cyclocomp_linter = NULL,
-    object_name_linter = NULL
+    object_name_linter = NULL,
+    object_usage_linter = NULL
   )
 exclusions: list(
     "doc/partialling_out.R",
