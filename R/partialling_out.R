@@ -47,13 +47,7 @@
 #' @srrstats {G5.8b} *Data of unsupported types (e.g., character or complex numbers in for functions designed only for numeric data)*
 #' @srrstats {G5.8c} *Data with all-`NA` fields or columns or all identical fields or columns*
 #' @srrstats {G5.8d} *Data outside the scope of the algorithm (for example, data with more fields (columns) than observations (rows) for some regression algorithms)*
-#' @srrstats {G5.9} **Noise susceptibility tests** *Packages should test for expected stochastic behaviour, such as through the following conditions:*
-#' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results*
-#' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results*
 #' @srrstats {G2.10} *Software should ensure that extraction or filtering of single columns from tabular inputs should not presume any particular default behaviour, and should ensure all column-extraction operations behave consistently regardless of the class of tabular data used as input.*
-#' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
-#' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
-#' @srrstats {EA1.3} *Identify the kinds of data each function is intended to accept as input*
 #' @srrstats {EA2.6} *Routines should appropriately process vector data regardless of additional attributes*
 #' @srrstats {EA3.0} *The algorithmic components of EDA Software should enable automated extraction and/or reporting of statistics as some sufficiently "meta" level (such as variable or model selection), for which previous or reference implementations require manual intervention.*
 #' @srrstats {EA3.1} *EDA software should enable standardised comparison of inputs, processes, models, or outputs which previous or reference implementations otherwise only enable in some comparably unstandardised form.*
@@ -70,7 +64,6 @@
 #' @srrstats {EA6.0b} *Dimensions of tabular objects*
 #' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
 #' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
-#' @srrstats {EA5.3} *Column-based summary statistics should always indicate the `storage.mode`, `class`, or equivalent defining attribute of each column.*
 #' @srrstats {G2.7} *Software should accept as input as many of the above standard tabular forms as possible, including extension to domain-specific forms.*
 #' @srrstats {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
 #' @srrstats {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
@@ -84,41 +77,46 @@ partialling_out <- function(model, data, weights, both, na.rm, ...) {
   UseMethod("partialling_out")
 }
 
-#' @importFrom stats formula
-#' @importFrom stats as.formula
+
 #' @importFrom stats lm
-#' @importFrom stats terms
+#' @importFrom stats as.formula
 #' @export
 partialling_out.lm <- function(model, data = NULL,
                                weights = NULL, both = TRUE,
                                na.rm = TRUE, ...) {
+
+  # prepare partial formulas and filter terms ----
+
+  formulas <- prepare_formula(model = model,
+                              both = both)
+
+  # check data is provided and is a data.frame ----
+
   if (is.null(data)) {
     stop("No data has been provided")
   } # check data was provided
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
   } # check data is a df
-  # get formula
-  f <- formula(model)
-  terms_obj <- terms(f)
-  y <- as.character(attr(terms_obj, "variables"))[2]
-  x <-  attr(terms_obj, "term.labels")[1]
-  controls <- attr(terms_obj, "term.labels")[-1]
-  if (length(controls) == 0) {
-    stop("No control variables found in the model.")
-  }
 
-  # clean
-  data <- data[, c(y, x, controls)]
+  # subset and filter data.frame ----
+  # subset
+  data <- data[, formulas$filter_terms]
+
+  # set warning if column class attributes are not standard
   classes <- vapply(data, class, FUN.VALUE = character(1))
 
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
                                       "Date", "POSIXct",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
-  } # throw a warning if non standard class attributes
+  } #
   original_nrow <- nrow(data) # for check later
-  # remove nas
+
+
+  ## remove NA if needed ----
+
+
   if (na.rm) {
     navec <- apply(data,
                    1,
@@ -127,6 +125,9 @@ partialling_out.lm <- function(model, data = NULL,
   }else {
     warning("na.rm is set to FALSE and results depend on lm() na_action")
   }
+
+  # prepare weights ----
+
   if (!is.null(weights) && is.null(model$weights)) {
     warning("Original model is not weighted, consider if weights are necessary")
   }
@@ -143,26 +144,24 @@ partialling_out.lm <- function(model, data = NULL,
     weights <- weights[!navec]
   }
 
-
-
+  # generate residuals ----
 
   if (both) {
-    # make formula for y on controls
-    formulay <- as.formula(paste0(y, " ~ ", paste0(controls, collapse = " + ")))
-    # make formula for 1st x on controls
-    formulax <- as.formula(paste0(x, " ~ ", paste0(controls, collapse = " + ")))
-    resy <- lm(formulay, data = data, weights = weights, ...)$residuals
-    resx <- lm(formulax, data = data, weights = weights, ...)$residuals
+
+    resy <- lm(as.formula(formulas$formulay),
+               data = data, weights = weights, ...)$residuals
+    resx <- lm(as.formula(formulas$formulax),
+               data = data, weights = weights, ...)$residuals
     resdf <- data.frame("y" = resy,
                         "x" = resx)
 
-    colnames(resdf) <- paste0("res_", c(y, x))
+    colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   }else {
-    formulax <- as.formula(paste0(x, " ~ ", paste0(controls, collapse = " + ")))
-    resx <- lm(formulax, data = data, weights = weights, ...)$residuals
-    resdf <- data.frame("y" = data[[y]],
+    resx <- lm(as.formula(formulas$formulax), data = data,
+               eights = weights, ...)$residuals
+    resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = resx)
-    colnames(resdf) <- c(y, paste0("res_", x))
+    colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
   }
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)
@@ -172,40 +171,50 @@ partialling_out.lm <- function(model, data = NULL,
   return(resdf)
 }
 
-#' @importFrom stats formula
-#' @importFrom stats as.formula
+
 #' @importFrom stats lm
+#' @importFrom stats as.formula
 #' @importFrom fixest feols
 #' @export
 partialling_out.fixest <- function(model, data = NULL,
                                    weights = NULL, both = TRUE,
                                    na.rm = TRUE, ...) {
-  # get data df - filter missing obs
+  # prepare partial formulas and filter terms ----
+
+  formulas <- prepare_formula(model = model,
+                              both = both)
+
+  # check data is provided and is a data.frame ----
+
+
   if (is.null(data)) {
     stop("No data has been provided")
   }  # check that a data object is supplied
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
-  } # check data was provided
-  f <- formula(model)
-  terms_obj <- terms(f)
-  y <- as.character(attr(terms_obj, "variables"))[2]
-  rhs <-  attr(terms_obj, "term.labels")
+  } # check it is a data.frame
 
-  terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
-  # make sure no "0" or similar terms are passed to filtering function
-  terms_filter <- terms_filter[terms_filter %in% colnames(data)]
-  data <- data[, c(y, terms_filter)]
+
+  # subset and filter data.frame ----
+  # subset
+  filter_terms <- formulas$filter_terms
+  filter_terms <- filter_terms[filter_terms %in% colnames(data)]
+  data <- data[, filter_terms]
+
+  # throw a warning if columns have non standard class attributes
   classes <- vapply(data, class, FUN.VALUE = character(1))
-  # warning if columns have non standard class attributes
+
 
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
                                       "Date", "POSIXct",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
   }
+
+
+
+  ## remove NA if needed ----
   original_nrow <- nrow(data) # for check later
-  # remove NA if needed
   if (na.rm) {
     navec <- apply(data, 1, function(x) any(is.na(x))
     )
@@ -213,28 +222,10 @@ partialling_out.fixest <- function(model, data = NULL,
   }else {
     warning("na.rm is set to FALSE and results depend on feols() na_action")
   }
-  # make formulas for y and x
-  # get indep vars, fe & inst vars
-  rhs_split <- unlist(strsplit(rhs, "\\|"))
-  x <- trimws(rhs_split[1]) # indep variables
-  main_expvar <- trimws(unlist(strsplit(x, "\\+")))[1]
-  controls <- trimws(unlist(strsplit(x, "\\+")))[-1]
-  fe <- trimws(rhs_split[2])
-  instvar <- trimws(rhs_split[3])
-  if (length(controls) == 0 && is.na(fe)) {
-    stop("No fixed effects or control variables found in the model.")
-  }
-  # make the common right hand side
 
-  rhs2 <- if (length(controls) == 0) {
-    c("1", fe, instvar)
-  } else {
-    c(controls, fe, instvar)
-  }
-  rhs2 <- rhs2[!is.na(rhs2)]
-  rhs2 <- paste0(rhs2, collapse = " | ")
 
-  # create residuals
+  # prepare weights ----
+
   if (!is.null(weights) && is.null(model$weights)) {
     warning("Original model is not weighted, consider if weights are necessary")
   }
@@ -252,27 +243,25 @@ partialling_out.fixest <- function(model, data = NULL,
     weights <- weights[!navec]
   }
 
+  # generate residuals ----
+
   if (both) {
-    yformula <- paste(y, rhs2, sep = " ~ ")
-    xformula <- paste(main_expvar, rhs2, sep = " ~ ")
-    yres <- fixest::feols(as.formula(yformula), data = data,
+    yres <- fixest::feols(as.formula(formulas$formulay), data = data,
                           weights = weights, ...)$residuals
-    xres <- fixest::feols(as.formula(xformula), data = data,
+    xres <- fixest::feols(as.formula(formulas$formulax), data = data,
                           weights = weights, ...)$residuals
 
     resdf <- data.frame("y" = yres,
                         "x" = xres)
-    colnames(resdf) <- paste0("res_", c(y, main_expvar))
+    colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   }else {
 
-    xformula <- paste(main_expvar, rhs2, sep = " ~ ")
-
-    xres <- fixest::feols(as.formula(xformula), data = data,
+    xres <- fixest::feols(as.formula(formulas$formulax), data = data,
                           weights = weights, ...)$residuals
 
-    resdf <- data.frame("y" = data[[y]],
+    resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = xres)
-    colnames(resdf) <- c(y, paste0("res_", main_expvar))
+    colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
   }
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)
@@ -283,39 +272,48 @@ partialling_out.fixest <- function(model, data = NULL,
   return(resdf)
 }
 
-#' @importFrom stats formula
-#' @importFrom stats as.formula
-#' @importFrom stats lm
+
 #' @importFrom lfe felm
+#' @importFrom stats as.formula
 #' @export
 partialling_out.felm <- function(model, data = NULL,
                                  weights = NULL, both = TRUE,
                                  na.rm = TRUE, ...) {
-  # get data df - filter missing obs
+
+  # prepare partial formulas and filter terms ----
+
+  formulas <- prepare_formula(model = model,
+                              both = both)
+
+  # check data is provided and is a data.frame ----
+
   if (is.null(data)) {
     stop("No data has been provided")
   } # check that a data object is supplied
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
-  } # check data was provided
-  f <- formula(model)
-  terms_obj <- terms(f)
-  y <- as.character(attr(terms_obj, "variables"))[2]
-  rhs <-  attr(terms_obj, "term.labels")
+  } # check data is a data.frame
 
-  terms_filter <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
-  # make sure no "0" or similar terms are passed to filtering function
-  terms_filter <- terms_filter[terms_filter %in% colnames(data)]
-  data <- data[, c(y, terms_filter)]
-  classes <- vapply(data, class, FUN.VALUE = character(1))
+  # subset and filter data.frame
+
+  # subset and filter data ----
+  # subset
+  filter_terms <- formulas$filter_terms
+  filter_terms <- filter_terms[filter_terms %in% colnames(data)]
+  data <- data[, filter_terms]
+
   # warning if columns have non standard class attributes
+  classes <- vapply(data, class, FUN.VALUE = character(1))
+
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
                                       "Date", "POSIXct",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
   }
+
+  ## remove NA if needed ----
   original_nrow <- nrow(data) # later check
-  # filter data if needed
+
   if (na.rm) {
     navec <- apply(data, 1, function(x) any(is.na(x)))
 
@@ -323,31 +321,8 @@ partialling_out.felm <- function(model, data = NULL,
   }else {
     warning("na.rm is set to FALSE and results depend on felm() na_action")
   }
-  # make formulas for y and x
-  # get indep vars, fe & inst vars
-  rhs_split <- unlist(strsplit(rhs, "\\|"))
-  x <- trimws(rhs_split[1]) # indep variables
-  main_expvar <- trimws(unlist(strsplit(x, "\\+")))[1]
-  controls <- trimws(unlist(strsplit(x, "\\+")))[-1]
 
-  fe <- trimws(rhs_split[2])
-  instvar <- trimws(rhs_split[3])
-  cluster <- trimws(rhs_split[4])
-  if (length(controls) == 0 && is.na(fe)) {
-    stop("No fixed effects or control variables found in the model.")
-  }
-  # make the common right hand side
-
-  rhs2 <- if (length(controls) == 0) {
-    c("1", fe, instvar, cluster)
-  } else {
-    c(controls, fe, instvar, cluster)
-  }
-  rhs2 <- rhs2[!is.na(rhs2)]
-  rhs2 <- paste0(rhs2, collapse = " | ")
-
-
-  # create residuals
+  # prepare weights ----
   if (!is.null(weights) && is.null(model$weights)) {
     warning("Original model is not weighted, consider if weights are necessary")
   }
@@ -366,27 +341,25 @@ partialling_out.felm <- function(model, data = NULL,
     weights <- weights[!navec]
   }
 
+  # generate residuals ----
 
   if (both) {
-    yformula <- paste(y, rhs2, sep = " ~ ")
-    xformula <- paste(main_expvar, rhs2, sep = " ~ ")
-    yres <- lfe::felm(as.formula(yformula), data = data,
+    yres <- lfe::felm(as.formula(formulas$formulay), data = data,
                       weights = weights, ...)$residuals
-    xres <- lfe::felm(as.formula(xformula), data = data,
+    xres <- lfe::felm(as.formula(formulas$formulax), data = data,
                       weights = weights, ...)$residuals
 
     resdf <- data.frame("y" = yres,
                         "x" = xres)
-    colnames(resdf) <- paste0("res_", c(y, main_expvar))
+    colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   }else {
 
-    xformula <- paste(main_expvar, rhs2, sep = " ~ ")
 
-    xres <- lfe::felm(as.formula(xformula), data = data,
+    xres <- lfe::felm(as.formula(formulas$formulax), data = data,
                       weights = weights, ...)$residuals
-    resdf <- data.frame("y" = data[[y]],
+    resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = xres)
-    colnames(resdf) <- c(y, paste0("res_", main_expvar))
+    colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
   }
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)

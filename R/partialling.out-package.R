@@ -13,6 +13,10 @@
 #' @srrstats {G1.5} *Software should include all code necessary to reproduce results which form the basis of performance claims made in associated publications.*
 #' @srrstats {G1.6} *Software should include code necessary to compare performance claims with alternative implementations in other R packages.*
 #' @srrstats {EA1.0} *Identify one or more target audiences for whom the software is intended*
+#' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
+#' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
+#' @srrstats {EA1.3} *Identify the kinds of data each function is intended to accept as input*
+
 #' @import rlang
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
