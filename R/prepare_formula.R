@@ -27,9 +27,9 @@ prepare_formula <- function(model, both) {
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.lm <- function(model, both = TRUE){
+prepare_formula.lm <- function(model, both = TRUE) {
 
-  if( !("lm" %in% class(model))) {
+  if (!("lm" %in% class(model))) {
     stop("model object must be of class lm, fixest, or felm")
   }
   # extract formula from models & terms from formula ----
@@ -70,7 +70,7 @@ prepare_formula.lm <- function(model, both = TRUE){
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.fixest <- function(model, both = TRUE){
+prepare_formula.fixest <- function(model, both = TRUE) {
 
   if (!("feols" %in% class(model))) {
     stop("model object must be of class lm, fixest, or felm")
@@ -141,8 +141,8 @@ prepare_formula.fixest <- function(model, both = TRUE){
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.felm <- function(model, both = TRUE){
-  if(!("felm" %in% class(model))) {
+prepare_formula.felm <- function(model, both = TRUE) {
+  if (!("felm" %in% class(model))) {
     stop("model object must be of class lm, fixest, or felm")
   }
 
@@ -209,4 +209,3 @@ prepare_formula.felm <- function(model, both = TRUE){
 
   return(out)
 }
-
