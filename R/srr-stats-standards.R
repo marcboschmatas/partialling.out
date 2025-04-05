@@ -9,14 +9,6 @@
 #'
 #' @srrstatsVerbose FALSE
 #'
-#' @srrstats {G1.0} *Statistical Software should list at least one primary reference from published academic literature.*
-#' @srrstats {G1.1} *Statistical Software should document whether the algorithm(s) it implements are:* - *The first implementation of a novel algorithm*; or - *The first implementation within **R** of an algorithm which has previously been implemented in other languages or contexts*; or - *An improvement on other implementations of similar algorithms in **R***.
-#' @srrstats {G1.2} *Statistical Software should include a* Life Cycle Statement *describing current and anticipated future states of development.*
-#' @srrstats {G1.3} *All statistical terminology should be clarified and unambiguously defined.*
-#' @srrstats {G1.4} *Software should use [`roxygen2`](https://roxygen2.r-lib.org/) to document all functions.*
-#' @srrstats {G1.4a} *All internal (non-exported) functions should also be documented in standard [`roxygen2`](https://roxygen2.r-lib.org/) format, along with a final `@noRd` tag to suppress automatic generation of `.Rd` files.*
-#' @srrstats {G1.5} *Software should include all code necessary to reproduce results which form the basis of performance claims made in associated publications.*
-#' @srrstats {G1.6} *Software should include code necessary to compare performance claims with alternative implementations in other R packages.*
 #' @noRd
 NULL
 
@@ -95,18 +87,5 @@ NULL
 #' @srrstatsNA {G2.4} *Provide appropriate mechanisms to convert between different data types, potentially including:*
 #' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
 #' @srrstatsNA {G2.5} *Where inputs are expected to be of `factor` type, secondary documentation should explicitly state whether these should be `ordered` or not, and those inputs should provide appropriate error or other routines to ensure inputs follow these expectations.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.6} *Software which accepts one-dimensional input should ensure values are appropriately pre-processed regardless of class structures.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.7} *Software should accept as input as many of the above standard tabular forms as possible, including extension to domain-specific forms.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.8} *Software should provide appropriate conversion or dispatch routines as part of initial pre-processing to ensure that all other sub-functions of a package receive inputs of a single defined class or type.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.9} *Software should issue diagnostic messages for type conversion in which information is lost (such as conversion of variables from factor to character; standardisation of variable names; or removal of meta-data such as those associated with [`sf`-format](https://r-spatial.github.io/sf/) data) or added (such as insertion of variable or column names where none were provided).*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
-#' These aspects are covered by lm, felm, and feols, which run under the hood of partialling_out
-#' @srrstatsNA {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
-#' list columns aren't accepted by lm, felm, or feols, so the model should throw an error
 NULL
 

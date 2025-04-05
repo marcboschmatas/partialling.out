@@ -43,19 +43,6 @@
 #' @srrstats {G2.15} *Functions should never assume non-missingness, and should never pass data with potential missing values to any base routines with default `na.rm = FALSE`-type parameters (such as [`mean()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html), [`sd()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/sd.html) or [`cor()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html)).*
 #' @srrstats {G2.16} *All functions should also provide options to handle undefined values (e.g., `NaN`, `Inf` and `-Inf`), including potentially ignoring or removing such values.*
 #' @srrstats {G3.0} *Statistical software should never compare floating point numbers for equality. All numeric equality comparisons should either ensure that they are made between integers, or use appropriate tolerances for approximate equality.*
-#' @srrstats {G5.0} *Where applicable or practicable, tests should use standard data sets with known properties (for example, the [NIST Standard Reference Datasets](https://www.itl.nist.gov/div898/strd/), or data sets provided by other widely-used R packages).*
-#' @srrstats {G5.1} *Data sets created within, and used to test, a package should be exported (or otherwise made generally available) so that users can confirm tests and run examples.*
-#' @srrstats {G5.2} *Appropriate error and warning behaviour of all functions should be explicitly demonstrated through tests. In particular,*
-#' @srrstats {G5.2a} *Every message produced within R code by `stop()`, `warning()`, `message()`, or equivalent should be unique*
-#' @srrstats {G5.2b} *Explicit tests should demonstrate conditions which trigger every one of those messages, and should compare the result with expected values.*
-#' @srrstats {G5.3} *For functions which are expected to return objects containing no missing (`NA`) or undefined (`NaN`, `Inf`) values, the absence of any such values in return objects should be explicitly tested.*
-#' @srrstats {G5.4} **Correctness tests** *to test that statistical algorithms produce expected results to some fixed test data sets (potentially through comparisons using binding frameworks such as [RStata](https://github.com/lbraglia/RStata)).*
-#' @srrstats {G5.5} *Correctness tests should be run with a fixed random seed*
-#' @srrstats {G5.6} **Parameter recovery tests** *to test that the implementation produce expected results given data with known properties. For instance, a linear regression algorithm should return expected coefficient values for a simulated data set generated from a linear model.*
-#' @srrstats {G5.6a} *Parameter recovery tests should generally be expected to succeed within a defined tolerance rather than recovering exact values.*
-#' @srrstats {G5.6b} *Parameter recovery tests should be run with multiple random seeds when either data simulation or the algorithm contains a random component. (When long-running, such tests may be part of an extended, rather than regular, test suite; see G5.10-4.12, below).*
-#' @srrstats {G5.7} **Algorithm performance tests** *to test that implementation performs as expected as properties of data change. For instance, a test may show that parameters approach correct estimates within tolerance as data size increases, or that convergence times decrease for higher convergence thresholds.*
-#' @srrstats {G5.8} **Edge condition tests** *to test that these conditions produce expected behaviour such as clear warnings or errors when confronted with data with extreme properties including but not limited to:*
 #' @srrstats {G5.8a} *Zero-length data*
 #' @srrstats {G5.8b} *Data of unsupported types (e.g., character or complex numbers in for functions designed only for numeric data)*
 #' @srrstats {G5.8c} *Data with all-`NA` fields or columns or all identical fields or columns*
@@ -64,7 +51,6 @@
 #' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results*
 #' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results*
 #' @srrstats {G2.10} *Software should ensure that extraction or filtering of single columns from tabular inputs should not presume any particular default behaviour, and should ensure all column-extraction operations behave consistently regardless of the class of tabular data used as input.*
-#' @srrstats {EA1.0} *Identify one or more target audiences for whom the software is intended*
 #' @srrstats {EA1.1} *Identify the kinds of data the software is capable of analysing (see *Kinds of Data* below).*
 #' @srrstats {EA1.2} *Identify the kinds of questions the software is intended to help explore.*
 #' @srrstats {EA1.3} *Identify the kinds of data each function is intended to accept as input*
@@ -85,6 +71,12 @@
 #' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
 #' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
 #' @srrstats {EA5.3} *Column-based summary statistics should always indicate the `storage.mode`, `class`, or equivalent defining attribute of each column.*
+#' @srrstats {G2.7} *Software should accept as input as many of the above standard tabular forms as possible, including extension to domain-specific forms.*
+#' @srrstats {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
+#' @srrstats {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
+#' @srrstats {G2.6} *Software which accepts one-dimensional input should ensure values are appropriately pre-processed regardless of class structures.*
+#' @srrstats {G2.8} *Software should provide appropriate conversion or dispatch routines as part of initial pre-processing to ensure that all other sub-functions of a package receive inputs of a single defined class or type.*
+#' @srrstats {G2.9} *Software should issue diagnostic messages for type conversion in which information is lost (such as conversion of variables from factor to character; standardisation of variable names; or removal of meta-data such as those associated with [`sf`-format](https://r-spatial.github.io/sf/) data) or added (such as insertion of variable or column names where none were provided).*
 
 #' @export
 # nolint end
@@ -118,6 +110,13 @@ partialling_out.lm <- function(model, data = NULL,
 
   # clean
   data <- data[, c(y, x, controls)]
+  classes <- vapply(data, class, FUN.VALUE = character(1))
+
+  if (length(classes[!(classes %in% c("numeric", "character", "factor",
+                                      "Date", "POSIXct",
+                                      "datetime", "logical"))]) > 0) {
+    warning("One or more columns have non standard classes")
+  } # throw a warning if non standard class attributes
   original_nrow <- nrow(data) # for check later
   # remove nas
   if (na.rm) {
@@ -197,6 +196,14 @@ partialling_out.fixest <- function(model, data = NULL,
   # make sure no "0" or similar terms are passed to filtering function
   terms_filter <- terms_filter[terms_filter %in% colnames(data)]
   data <- data[, c(y, terms_filter)]
+  classes <- vapply(data, class, FUN.VALUE = character(1))
+  # warning if columns have non standard class attributes
+
+  if (length(classes[!(classes %in% c("numeric", "character", "factor",
+                                      "Date", "POSIXct",
+                                      "datetime", "logical"))]) > 0) {
+    warning("One or more columns have non standard classes")
+  }
   original_nrow <- nrow(data) # for check later
   # remove NA if needed
   if (na.rm) {
@@ -300,6 +307,13 @@ partialling_out.felm <- function(model, data = NULL,
   # make sure no "0" or similar terms are passed to filtering function
   terms_filter <- terms_filter[terms_filter %in% colnames(data)]
   data <- data[, c(y, terms_filter)]
+  classes <- vapply(data, class, FUN.VALUE = character(1))
+  # warning if columns have non standard class attributes
+  if (length(classes[!(classes %in% c("numeric", "character", "factor",
+                                      "Date", "POSIXct",
+                                      "datetime", "logical"))]) > 0) {
+    warning("One or more columns have non standard classes")
+  }
   original_nrow <- nrow(data) # later check
   # filter data if needed
   if (na.rm) {
