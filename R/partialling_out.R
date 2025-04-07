@@ -104,13 +104,15 @@ partialling_out.lm <- function(model, data = NULL,
   data <- data[, formulas$filter_terms]
 
   # set warning if column class attributes are not standard
-  classes <- vapply(data, class, FUN.VALUE = character(1))
+  classes <- vapply(data, \(x) class(x)[1], FUN.VALUE = character(1))
+
 
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
-                                      "Date", "POSIXct",
+                                      "Date", "POSIXct", "POSIXt",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
-  } #
+  }
+
   original_nrow <- nrow(data) # for check later
 
 
@@ -157,7 +159,7 @@ partialling_out.lm <- function(model, data = NULL,
 
     colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   }else {
-    resx <- lm(as.formula(formulas$formulax), data = data,
+  resx <- lm(as.formula(formulas$formulax), data = data,
                eights = weights, ...)$residuals
     resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = resx)
@@ -202,11 +204,11 @@ partialling_out.fixest <- function(model, data = NULL,
   data <- data[, filter_terms]
 
   # throw a warning if columns have non standard class attributes
-  classes <- vapply(data, class, FUN.VALUE = character(1))
+  classes <- vapply(data, \(x) class(x)[1], FUN.VALUE = character(1))
 
 
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
-                                      "Date", "POSIXct",
+                                      "Date", "POSIXct", "POSIXt",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
   }
@@ -303,13 +305,15 @@ partialling_out.felm <- function(model, data = NULL,
   data <- data[, filter_terms]
 
   # warning if columns have non standard class attributes
-  classes <- vapply(data, class, FUN.VALUE = character(1))
+  classes <- vapply(data, \(x) class(x)[1], FUN.VALUE = character(1))
+
 
   if (length(classes[!(classes %in% c("numeric", "character", "factor",
-                                      "Date", "POSIXct",
+                                      "Date", "POSIXct", "POSIXt",
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
   }
+
 
   ## remove NA if needed ----
   original_nrow <- nrow(data) # later check
