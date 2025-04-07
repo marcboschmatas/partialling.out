@@ -159,7 +159,7 @@ partialling_out.lm <- function(model, data = NULL,
 
     colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   }else {
-  resx <- lm(as.formula(formulas$formulax), data = data,
+    resx <- lm(as.formula(formulas$formulax), data = data,
                eights = weights, ...)$residuals
     resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = resx)
