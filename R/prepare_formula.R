@@ -17,7 +17,7 @@
 #' partial model, if `both` is set to `TRUE`, `formulay`, the formula for
 #' the variable of interest partial model, `y` for the name of the interest
 #' variable, and `x` for the name of the main explanatory variable
-#' @srrstats {G2.1} *Implement assertions on types of inputs (see the initial point on nomenclature above).*
+#' @srrstats {G2.1} *Function is a generic with S3 methods for all accepted input models*
 #' @noRd
 
 # nolint end
