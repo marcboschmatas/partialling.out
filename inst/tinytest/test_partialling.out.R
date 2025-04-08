@@ -14,9 +14,9 @@ set.seed(1234)
 # general standards for tests
 
 # nolint start
-#' @srrstats {G5.0} *Where applicable or practicable, tests should use standard data sets with known properties (for example, the [NIST Standard Reference Datasets](https://www.itl.nist.gov/div898/strd/), or data sets provided by other widely-used R packages).*
-#' @srrstats {G5.1} *Data sets created within, and used to test, a package should be exported (or otherwise made generally available) so that users can confirm tests and run examples.*
-#' @srrstats {G5.3} *For functions which are expected to return objects containing no missing (`NA`) or undefined (`NaN`, `Inf`) values, the absence of any such values in return objects should be explicitly tested.*
+#' @srrstats {G5.0} *Tests use the `palmerpenguins` dataset which is available on CRAN or a purpose-made dataset created under a random seed.*
+#' @srrstats {G5.1} *All datasets are available to the end user, either by being created within the tests file or available on CRAN*
+#' @srrstats {G5.3} *The absence of NA, NaN, or inf values is roperly tested.*
 NULL
 # NOLINT END
 
@@ -24,8 +24,8 @@ NULL
 # Test for errors warnings etc ----
 
 # nolint start
-#' @srrstats {G5.2} *Appropriate error and warning behaviour of all functions should be explicitly demonstrated through tests. In particular,*
-#' @srrstats {G5.2a} *Every message produced within R code by `stop()`, `warning()`, `message()`, or equivalent should be unique*
+#' @srrstats {G5.2} *All possible error conditions are tested*
+#' @srrstats {G5.2a} *All error or warning messages is uniques*
 #' @srrstats {G5.2b} *Explicit tests should demonstrate conditions which trigger every one of those messages, and should compare the result with expected values.*
 NULL
 
