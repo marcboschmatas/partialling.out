@@ -42,34 +42,29 @@
 #' @srrstats {G2.14b} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
 #' @srrstats {G2.15} *Non missingness is not assumed and passing data with missing values may cause errors or unexpected behaviour*
 #' @srrstats {G2.16} *undefined values (e.g., `NaN`, `Inf` and `-Inf`) are handled by underlying model functions*
-#' @srrstats {G3.0} *Statistical software should never compare floating point numbers for equality. All numeric equality comparisons should either ensure that they are made between integers, or use appropriate tolerances for approximate equality.*
-#' @srrstats {G5.8a} *Zero-length data*
-#' @srrstats {G5.8b} *Data of unsupported types (e.g., character or complex numbers in for functions designed only for numeric data)*
-#' @srrstats {G5.8c} *Data with all-`NA` fields or columns or all identical fields or columns*
+#' @srrstats {G3.0} *All comparisons are made within ranges of tolerance.*
+#' @srrstats {G5.8a} *Zero-length data will throw errors*
+#' @srrstats {G5.8b} *Data of unsupported types will throw errors*
+#' @srrstats {G5.8c} *Data with all-`NA` fields or columns or all identical fields or columns will throw errors*
 #' @srrstats {G5.8d} *Data outside the scope of the algorithm (for example, data with more fields (columns) than observations (rows) for some regression algorithms)*
-#' @srrstats {G2.10} *Software should ensure that extraction or filtering of single columns from tabular inputs should not presume any particular default behaviour, and should ensure all column-extraction operations behave consistently regardless of the class of tabular data used as input.*
-#' @srrstats {EA2.6} *Routines should appropriately process vector data regardless of additional attributes*
-#' @srrstats {EA3.0} *The algorithmic components of EDA Software should enable automated extraction and/or reporting of statistics as some sufficiently "meta" level (such as variable or model selection), for which previous or reference implementations require manual intervention.*
-#' @srrstats {EA3.1} *EDA software should enable standardised comparison of inputs, processes, models, or outputs which previous or reference implementations otherwise only enable in some comparably unstandardised form.*
-#' @srrstats {EA4.0} *EDA Software should ensure all return results have types which are consistent with input types.*
+#' @srrstats {G2.10} *Filtering works via removal of NA values if `na.rm = TRUE`*
+#' @srrstats {EA2.6} *Vector data with additional attributes will be transformed via the underlying models*
+#' @srrstats {EA3.0} *The only implementation of FWL theorem other than manually implementing it includes passing a formula to a function instead of the usual model.*
+#' @srrstats {EA3.1} *Applying the FWL theorem to a regression model can only be done via plotting (using `fwlplot`) or manually defining functions for it.*
+#' @srrstats {EA4.0} *Software returns a data.frame of residualised variables from a regression model*
 #' @srrstats {EA4.1} *EDA Software should implement parameters to enable explicit control of numeric precision*
-#' @srrstats {EA4.2} *The primary routines of EDA Software should return objects for which default `print` and `plot` methods give sensible results. Default `summary` methods may also be implemented.*
+#' @srrstats {EA4.2} *Software returns a data.frame, with appropriate `print()`, and `plot()` methods*
 #' @srrstats {EA5.0} *Graphical presentation in EDA software should be as accessible as possible or practicable. In particular, EDA software should consider accessibility in terms of:*
 #' @srrstats {EA5.0a} *Typeface sizes, which should default to sizes which explicitly enhance accessibility*
 #' @srrstats {EA5.0b} *Default colour schemes, which should be carefully constructed to ensure accessibility.*
 #' @srrstats {EA5.1} *Any explicit specifications of typefaces which override default values provided through other packages (including the `graphics` package) should consider accessibility*
-#' @srrstats {EA5.2} *Screen-based output should never rely on default print formatting of `numeric` types, rather should also use some version of `round(., digits)`, `formatC`, `sprintf`, or similar functions for numeric formatting according the parameter described in* **EA4.1**.
-#' @srrstats {EA6.0} *Return values from all functions should be tested, including tests for the following characteristics:*
-#' @srrstats {EA6.0a} *Classes and types of objects*
-#' @srrstats {EA6.0b} *Dimensions of tabular objects*
-#' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
-#' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
-#' @srrstats {G2.7} *Software should accept as input as many of the above standard tabular forms as possible, including extension to domain-specific forms.*
-#' @srrstats {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
-#' @srrstats {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
-#' @srrstats {G2.6} *Software which accepts one-dimensional input should ensure values are appropriately pre-processed regardless of class structures.*
-#' @srrstats {G2.8} *Software should provide appropriate conversion or dispatch routines as part of initial pre-processing to ensure that all other sub-functions of a package receive inputs of a single defined class or type.*
-#' @srrstats {G2.9} *Software should issue diagnostic messages for type conversion in which information is lost (such as conversion of variables from factor to character; standardisation of variable names; or removal of meta-data such as those associated with [`sf`-format](https://r-spatial.github.io/sf/) data) or added (such as insertion of variable or column names where none were provided).*
+#' @srrstats {EA5.2} *Printing of numeric values is done via `print.data.frame()` which includes rounding.*
+#' @srrstats {G2.7} *Software accepts extensions to data.frame*
+#' @srrstats {G2.12} *Software accepts and transforms list columns if the underlying model is `feols()` and will throw an error if it is `lm()` or `felm()`*
+#' @srrstats {G2.11} *`data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed*
+#' @srrstats {G2.6} *One-dimensional input (weights) is appropriately pre-processed regardless of class structures.*
+#' @srrstats {G2.8} *Data.frame is maintained as such, and formulas are transformed into partial formulas via the retrieval and modification of attributes*
+#' @srrstats {G2.9} *If potential loss of information can be found, package will throw a warning*
 
 #' @export
 # nolint end
