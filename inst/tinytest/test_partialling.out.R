@@ -16,7 +16,7 @@ set.seed(1234)
 # nolint start
 #' @srrstats {G5.0} *Tests use the `palmerpenguins` dataset which is available on CRAN or a purpose-made dataset created under a random seed.*
 #' @srrstats {G5.1} *All datasets are available to the end user, either by being created within the tests file or available on CRAN*
-#' @srrstats {G5.3} *The absence of NA, NaN, or inf values is roperly tested.*
+#' @srrstats {G5.3} *The absence of NA, NaN, or inf values is properly tested.*
 NULL
 # NOLINT END
 
@@ -218,7 +218,7 @@ expect_silent(partialling_out(model,
 ## test that column summaries will behave as expected ----
 
 # nolint start
-#' @srrstats {EA5.3} *Column-based summary statistics should always indicate the `storage.mode`, `class`, or equivalent defining attribute of each column.*
+#' @srrstats {EA5.3} *summaries are tested to behave as expected*
 NULL
 # nolint end
 
@@ -266,7 +266,7 @@ expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
 ## test that a non standard dataframe will be accepted---
 
 # nolint start
-#' @srrstats {G2.7} *Software should accept as input as many of the above standard tabular forms as possible, including extension to domain-specific forms.*
+#' @srrstats {G2.7} *`tsibble` objects are accepted and treted like usual data.frames*
 NULL
 # nolint end
 
@@ -299,7 +299,7 @@ expect_silent(partialling_out(model, df))
 
 # #test that columns with weird classes will throw a warning  ----
 # nolint start
-#' @srrstats {G2.11} *Software should ensure that `data.frame`-like tabular objects which have columns which do not themselves have standard class attributes (typically, `vector`) are appropriately processed, and do not error without reason. This behaviour should be tested. Again, columns created by the [`units` package](https://github.com/r-quantities/units/) provide a good test case.*
+#' @srrstats {G2.11} *columns with non standard classes are tested to be accepted and that a warning is given that conversion is up to the underlying model*
 NULL
 # nolint end
 
@@ -318,7 +318,7 @@ expect_warning(partialling_out(model, df))
 
 ## #further check that list columns are accepted in partialling_out.feols ----
 # nolint start
-#' @srrstats {G2.12} *Software should ensure that `data.frame`-like tabular objects which have list columns should ensure that those columns are appropriately pre-processed either through being removed, converted to equivalent vector columns where appropriate, or some other appropriate treatment such as an informative error. This behaviour should be tested.*
+#' @srrstats {G2.12} *list-columns are tested to be accepted in `feols`*
 NULL
 # nolint end
 
@@ -335,16 +335,16 @@ expect_warning(partialling_out(model, df))
 
 
 # nolint start
-#' @srrstats {G5.4} **Correctness tests** *to test that statistical algorithms produce expected results to some fixed test data sets (potentially through comparisons using binding frameworks such as [RStata](https://github.com/lbraglia/RStata)).*
-#' @srrstats {G5.5} *Correctness tests should be run with a fixed random seed*
-#' @srrstats {G5.6} **Parameter recovery tests** *to test that the implementation produce expected results given data with known properties. For instance, a linear regression algorithm should return expected coefficient values for a simulated data set generated from a linear model.*
-#' @srrstats {G5.6a} *Parameter recovery tests should generally be expected to succeed within a defined tolerance rather than recovering exact values.*
-#' @srrstats {G5.6b} *Parameter recovery tests should be run with multiple random seeds when either data simulation or the algorithm contains a random component. (When long-running, such tests may be part of an extended, rather than regular, test suite; see G5.10-4.12, below).*
+#' @srrstats {G5.4} *Correctness tests are implemented*
+#' @srrstats {G5.5} *Correctness tests are run with a fixed random seed*
+#' @srrstats {G5.6} *Correctness tests are performed with a well-known dataset*
+#' @srrstats {G5.6a} *Correctness test is applied within a tolerance band*
+#' @srrstats {G5.6b} *Parameter recovery tests are run with multiple random seeds when either data simulation or the algorithm contains a random component.*
 #' @srrstats {G5.7} **Algorithm performance tests** *to test that implementation performs as expected as properties of data change. For instance, a test may show that parameters approach correct estimates within tolerance as data size increases, or that convergence times decrease for higher convergence thresholds.*
-#' @srrstats {G5.8} **Edge condition tests** *to test that these conditions produce expected behaviour such as clear warnings or errors when confronted with data with extreme properties including but not limited to:*
-#' @srrstats {G5.9} **Noise susceptibility tests** *Packages should test for expected stochastic behaviour, such as through the following conditions:*
-#' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results*
-#' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results*
+#' @srrstats {G5.8} **Edge condition tested*
+#' @srrstats {G5.9} **Noise susceptibility tested*
+#' @srrstats {G5.9a} *Adding trivial noise (for example, at the scale of `.Machine$double.eps`) to data does not meaningfully change results has been tested*
+#' @srrstats {G5.9b} *Running under different random seeds or initial conditions does not meaningfully change results. this behaviour has been tested*
 
 
 NULL
@@ -494,11 +494,11 @@ expect_equal(unname(signif(resmod$coefficients[2], 4)),
 # test for return object characteristics ----
 
 # nolint start
-#' @srrstats {EA6.0} *Return values from all functions should be tested, including tests for the following characteristics:*
-#' @srrstats {EA6.0a} *Classes and types of objects*
-#' @srrstats {EA6.0b} *Dimensions of tabular objects*
-#' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects*
-#' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects *
+#' @srrstats {EA6.0} *Return values from all functions are tested*
+#' @srrstats {EA6.0a} *Classes and types of objects are tested*
+#' @srrstats {EA6.0b} *number of columns is tested*
+#' @srrstats {EA6.0c} *Column names (or equivalent) of tabular objects are tested*
+#' @srrstats {EA6.0d} *Classes or types of all columns contained within `data.frame`-type tabular objects are tested*
 NULL
 # nolint end
 
