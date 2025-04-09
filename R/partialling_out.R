@@ -34,14 +34,14 @@
 #' }
 #' @srrstats {G2.0} *Implement assertions on lengths of inputs, particularly through asserting that inputs expected to be single- or multi-valued are indeed so.*
 #' @srrstats {G2.0a} *Provide explicit secondary documentation of any expectations on lengths of inputs*
-#' @srrstats {G2.1} *Implement assertions on types of inputs (see the initial point on nomenclature above).*
-#' @srrstats {G2.1a} *Provide explicit secondary documentation of expectations on data types of all vector inputs.*
-#' @srrstats {G2.14} *Where possible, all functions should provide options for users to specify how to handle missing (`NA`) data, with options minimally including:*
-#' @srrstats {G2.13} *Statistical Software should implement appropriate checks for missing data as part of initial pre-processing prior to passing data to analytic algorithms.*
-#' @srrstats {G2.14a} *error on missing data*
-#' @srrstats {G2.14b} *ignore missing data with default warnings or messages issued*
-#' @srrstats {G2.15} *Functions should never assume non-missingness, and should never pass data with potential missing values to any base routines with default `na.rm = FALSE`-type parameters (such as [`mean()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html), [`sd()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/sd.html) or [`cor()`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html)).*
-#' @srrstats {G2.16} *All functions should also provide options to handle undefined values (e.g., `NaN`, `Inf` and `-Inf`), including potentially ignoring or removing such values.*
+#' @srrstats {G2.1} *Assertions on input types implemented via S3 methods + conditionals*
+#' @srrstats {G2.1a} *Explicit secondary documentation of expectations on data types of all vector inputs provided.*
+#' @srrstats {G2.14} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
+#' @srrstats {G2.13} *Checks for missing data implemented*
+#' @srrstats {G2.14a} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
+#' @srrstats {G2.14b} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
+#' @srrstats {G2.15} *Non missingness is not assumed and passing data with missing values may cause errors or unexpected behaviour*
+#' @srrstats {G2.16} *undefined values (e.g., `NaN`, `Inf` and `-Inf`) are handled by underlying model functions*
 #' @srrstats {G3.0} *Statistical software should never compare floating point numbers for equality. All numeric equality comparisons should either ensure that they are made between integers, or use appropriate tolerances for approximate equality.*
 #' @srrstats {G5.8a} *Zero-length data*
 #' @srrstats {G5.8b} *Data of unsupported types (e.g., character or complex numbers in for functions designed only for numeric data)*
