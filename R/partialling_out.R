@@ -14,7 +14,8 @@
 #' @param model object for which we want to residualise variables
 #' @param data data.frame used in the original model. Using different data will
 #' return unexpected results or an error.
-#' @param weights a numeric vector for weighting the partial models
+#' @param weights a numeric vector for weighting the partial models. Length must be
+#' equal to number of rows of `data`
 #' @param both if `TRUE` will residualise both the variable of interest and the
 #' first explanatory variable in the model. If `FALSE`, only the latter.
 #' Set to `TRUE` by default
@@ -32,11 +33,11 @@
 #'                data = penguins)
 #' partial_df <- partialling_out(model, penguins, both = TRUE)
 #' }
-#' @srrstats {G2.0} *Implement assertions on lengths of inputs, particularly through asserting that inputs expected to be single- or multi-valued are indeed so.*
-#' @srrstats {G2.0a} *Provide explicit secondary documentation of any expectations on lengths of inputs*
+#' @srrstats {G2.0} *An assertion has been included to make sure length of the original data.frame and weights match.*
+#' @srrstats {G2.0a} *Explicit documentation on length of `weights` has been added*
 #' @srrstats {G2.1} *Assertions on input types implemented via S3 methods + conditionals*
 #' @srrstats {G2.1a} *Explicit secondary documentation of expectations on data types of all vector inputs provided.*
-#' @srrstats {G2.14} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
+#' @srrstats {G2.14} *Options for NA handling provided in `na.rm`. Further `na.option` arguments to underlying functions can be passed in `...`*
 #' @srrstats {G2.13} *Checks for missing data implemented*
 #' @srrstats {G2.14a} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
 #' @srrstats {G2.14b} *Options for NA handling provided in `na.rm`, and `na.option` arguments to underlying functions can be passed in `...`*
@@ -54,10 +55,10 @@
 #' @srrstats {EA4.0} *Software returns a data.frame of residualised variables from a regression model*
 #' @srrstats {EA4.1} *EDA Software should implement parameters to enable explicit control of numeric precision*
 #' @srrstats {EA4.2} *Software returns a data.frame, with appropriate `print()`, and `plot()` methods*
-#' @srrstats {EA5.0} *Graphical presentation in EDA software should be as accessible as possible or practicable. In particular, EDA software should consider accessibility in terms of:*
-#' @srrstats {EA5.0a} *Typeface sizes, which should default to sizes which explicitly enhance accessibility*
-#' @srrstats {EA5.0b} *Default colour schemes, which should be carefully constructed to ensure accessibility.*
-#' @srrstats {EA5.1} *Any explicit specifications of typefaces which override default values provided through other packages (including the `graphics` package) should consider accessibility*
+#' @srrstats {EA5.0} *Package does not provide visualisations, but vignettes have been designed to ensure accessibility*
+#' @srrstats {EA5.0a} *Typeface sizes for vignettes have been designed to ensure accessibility*
+#' @srrstats {EA5.0b} *Default colour schemes for vignettes have been designed to ensure accessibility*
+#' @srrstats {EA5.1} *No typefaces overriding*
 #' @srrstats {EA5.2} *Printing of numeric values is done via `print.data.frame()` which includes rounding.*
 #' @srrstats {G2.7} *Software accepts extensions to data.frame*
 #' @srrstats {G2.12} *Software accepts and transforms list columns if the underlying model is `feols()` and will throw an error if it is `lm()` or `felm()`*
