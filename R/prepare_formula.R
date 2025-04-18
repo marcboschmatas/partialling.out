@@ -37,6 +37,13 @@ prepare_formula.lm <- function(model, both = TRUE) {
   x <-  attr(terms_obj, "term.labels")[1]
   # extract controls ----
   controls <- attr(terms_obj, "term.labels")[-1]
+
+  # prepare filter terms object ----
+  filter_terms <- c(y, x, controls)
+  filter_terms <- trimws(unlist(lapply(filter_terms,
+                                       strsplit,
+                                       split = "\\:|\\*")))
+  filter_terms <- unique(filter_terms)
   if (length(controls) == 0) {
     stop("No control variables found in the model.")
   }
@@ -46,7 +53,7 @@ prepare_formula.lm <- function(model, both = TRUE) {
     formulay <- paste0(y, " ~ ", paste0(controls, collapse = " + "))
     # make formula for 1st x on controls
     formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list("filter_terms" = c(y, x, controls),
+    out <- list("filter_terms" = filter_terms,
                 "formulay" = formulay,
                 "formulax" = formulax,
                 "y" = y,
@@ -54,13 +61,14 @@ prepare_formula.lm <- function(model, both = TRUE) {
 
   }else {
     formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list("filter_terms" = c(y, x, controls),
+    out <- list("filter_terms" = filter_terms,
                 "formulax" = formulax,
                 "y" = y,
                 "x" = x)
   }
   return(out)
 }
+
 
 
 
@@ -76,8 +84,12 @@ prepare_formula.fixest <- function(model, both = TRUE) {
   rhs <-  attr(terms_obj, "term.labels")
 
   # generate the vector of all elements to later subset data.frame ----
-  filter_terms <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
+  filter_terms <- gsub("i\\(", "", rhs) # remove interactions
+  filter_terms <- gsub("\\)", "", filter_terms)
+  filter_terms <- trimws(unlist(strsplit(filter_terms,
+                                         ",|\\+|\\||\\^|\\[{1,2}|\\]{1,2}")))
   filter_terms <- c(y, filter_terms)
+  filter_terms <- unique(filter_terms)
 
 
   # get explanatory variables, fe & inst vars ----
@@ -85,6 +97,9 @@ prepare_formula.fixest <- function(model, both = TRUE) {
   # main explanatory variable & controls ----
   x <- trimws(rhs_split[1])
   main_expvar <- trimws(unlist(strsplit(x, "\\+")))[1]
+  if (grepl("i\\(", main_expvar)) {
+    stop("Interaction terms as main explanatory variable are not supported")
+  }
   controls <- trimws(unlist(strsplit(x, "\\+")))[-1]
   # fixed effects ----
   fe <- trimws(rhs_split[2])
@@ -143,7 +158,7 @@ prepare_formula.felm <- function(model, both = TRUE) {
   rhs <-  attr(terms_obj, "term.labels")
 
   # generate the vector of all elements to later subset data.frame
-  filter_terms <- trimws(unlist(strsplit(rhs, "\\+|\\|")))
+  filter_terms <- trimws(unlist(strsplit(rhs, "\\+|\\||\\*|\\:")))
   filter_terms <- c(y, filter_terms)
 
 

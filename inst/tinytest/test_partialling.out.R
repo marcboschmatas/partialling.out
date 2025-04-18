@@ -7,6 +7,8 @@ library(tinytest)
 library(partialling.out)
 library(tsibble)
 library(units)
+library(purrr)
+
 
 penguins <- penguins
 set.seed(1234)
@@ -18,15 +20,15 @@ set.seed(1234)
 #' @srrstats {G5.1} *All datasets are available to the end user, either by being created within the tests file or available on CRAN*
 #' @srrstats {G5.3} *The absence of NA, NaN, or inf values is properly tested.*
 NULL
-# NOLINT END
+# nolint end
 
 
 # Test for errors warnings etc ----
 
 # nolint start
 #' @srrstats {G5.2} *All possible error conditions are tested*
-#' @srrstats {G5.2a} *All error or warning messages is uniques*
-#' @srrstats {G5.2b} *Explicit tests should demonstrate conditions which trigger every one of those messages, and should compare the result with expected values.*
+#' @srrstats {G5.2a} *All error or warning messages are unique*
+#' @srrstats {G5.2b} *All error and warning messages have been checked*
 NULL
 
 # nolint end
@@ -34,175 +36,381 @@ NULL
 
 ## Expect error if no data is provided ----
 
-expect_error({
-              mod <- lm(bill_length_mm ~  bill_depth_mm + species,
-                        data = penguins)
-              partialling_out(mod)})
+### lm ----
+safe_partialling_out <- safely(partialling_out)
 
 
-expect_error({
-              mod <- feols(bill_length_mm ~  bill_depth_mm | species,
-                           data = penguins)
-              partialling_out(mod)})
+mod <- lm(bill_length_mm ~  bill_depth_mm + species,
+  data = penguins)
 
 
-expect_error({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species,
-              data = penguins)
-  partialling_out(mod)})
+lmerrornodata <- safe_partialling_out(mod)
 
+expect_equal(lmerrornodata$error$message,
+  "No data has been provided")
+
+
+
+### feols ----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm | species,
+  data = penguins)
+
+feolserrornodata <- safe_partialling_out(mod)
+
+expect_equal(feolserrornodata$error$message,
+    "No data has been provided")
+
+
+### felm----
+mod <- felm(bill_length_mm ~  bill_depth_mm | species,
+  data = penguins)
+
+felmerrornodata <- safe_partialling_out(mod)
+
+expect_equal(felmerrornodata$error$message,
+    "No data has been provided")
 
 ## expect error if data is not a data.frame ----
 
-expect_error({
-              mod <- lm(bill_length_mm ~  bill_depth_mm + species,
-                        data = penguins)
-              partialling_out(mod, data = c(1,2,3))})
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species,
+  data = penguins)
+
+lmerrornodf <- safe_partialling_out(mod, data = c(1, 2, 3))
+
+expect_equal(lmerrornodf$error$message,
+  "data input should be a data.frame")
 
 
-expect_error({
-              mod <- feols(bill_length_mm ~  bill_depth_mm | species,
-                           data = penguins)
-              partialling_out(mod, data = c(1,2,3))})
+### feols ----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm + species,
+  data = penguins)
+
+feolserrornodf <- safe_partialling_out(mod, data = c(1, 2, 3))
+
+expect_equal(feolserrornodf$error$message,
+  "data input should be a data.frame")
 
 
-expect_error({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species,
-              data = penguins)
-  partialling_out(mod, data = c(1,2,3))})
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species,
+  data = penguins)
+
+felmerrornodf <- safe_partialling_out(mod, data = c(1, 2, 3))
+
+expect_equal(felmerrornodf$error$message,
+  "data input should be a data.frame")
 
 
 ## expect error if weights are non numeric ----
 
-expect_error({
-  mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
-  partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))})
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
 
+nonnumweightslm <- safe_partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))
 
-expect_error({
-  mod <- feols(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))})
+expect_equal(nonnumweightslm$error$message,
+  "Weights should be a numeric vector")
 
+### feols ----
 
-expect_error({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))})
+mod <- feols(bill_length_mm ~  bill_depth_mm + species, data = penguins)
 
+nonnumweightsfeols <- safe_partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))
 
+expect_equal(nonnumweightsfeols$error$message,
+  "Weights should be a numeric vector")
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+nonnumweightsfelm <- safe_partialling_out(mod, data = penguins, weights = rep("a", nrow(penguins)))
+
+expect_equal(nonnumweightsfelm$error$message,
+  "Weights should be a numeric vector")
 ## expect error if weights are of the wrong length ----
 
-expect_error({
-  mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
-  partialling_out(mod, data = penguins, weights = c(1,2,3))})
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+wrongerrorslm <- safe_partialling_out(mod, penguins, weights = c(1, 2, 3))
+
+expect_equal(wrongerrorslm$error$message,
+  "Length of weights is not equal to number of observations")
+### feols ----
 
 
-expect_error({
-  mod <- feols(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = c(1,2,3))})
+mod <- feols(bill_length_mm ~  bill_depth_mm + species, data = penguins)
 
-expect_error({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = c(1,2,3))})
+wrongerrorsfeols <- safe_partialling_out(mod, penguins, weights = c(1, 2, 3))
 
+expect_equal(wrongerrorsfeols$error$message,
+  "Length of weights is not equal to number of observations")
+
+
+
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+wrongerrorsfelm <- safe_partialling_out(mod, penguins, weights = c(1, 2, 3))
+
+expect_equal(wrongerrorsfelm$error$message,
+  "Length of weights is not equal to number of observations")
 
 ## expect error if only one covariate or no fixed effects ----
 
-expect_error({
-  mod <- lm(bill_length_mm ~  bill_depth_mm, data = penguins)
-  partialling_out(mod, data = penguins)})
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm, data = penguins)
+
+onecovlm <- safe_partialling_out(mod, penguins)
+
+expect_equal(onecovlm$error$message,"No control variables found in the model.")
+### feols----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm, data = penguins)
+
+onecovfeols <- safe_partialling_out(mod, penguins)
+
+expect_equal(onecovfeols$error$message,
+  "No fixed effects or control variables found in the model.")
 
 
-expect_error({
-  mod <- feols(bill_length_mm ~  bill_depth_mm, data = penguins)
-  partialling_out(mod, data = penguins)})
+
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm, data = penguins)
+
+onecovfelm <- safe_partialling_out(mod, penguins)
+
+expect_equal(onecovfelm$error$message,
+  "No fixed effects or control variables found in the model.")
 
 
-expect_error({
-  mod <- felm(bill_length_mm ~  bill_depth_mm, data = penguins)
-  partialling_out(mod, data = penguins)})
+# nolint start
+#' @srrstats {G5.8a} *Zero-length data will throw errors*
+#' @srrstats {G5.8b} *Data of unsupported types will throw errors*
+#' @srrstats {G5.8c} *Data with all-`NA` fields or columns or all identical fields or columns will throw errors*
+NULL
+
+# nolint end
+
+## expect error if zero length data is provided ----
+
+
+### lm----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+noldatalm <- safe_partialling_out(mod, penguins[0, ])
+
+expect_equal(noldatalm$error$message,
+  "data has zero rows")
+### feols ----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+noldatafeols <- safe_partialling_out(mod, penguins[0, ])
+
+expect_equal(noldatafeols$error$message,
+  "data has zero rows")
+
+
+### felm----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+noldatafelm <- safe_partialling_out(mod, penguins[0, ])
+
+expect_equal(noldatafelm$error$message,
+  "data has zero rows")
+
+
+## expect error if wrong data types are used ----
+
+penguins_wrong <- penguins
+
+penguins_wrong$bill_length_mm <- rep("a", nrow(penguins))
+penguins_wrong$bill_depth_mm <- rep("b", nrow(penguins))
+
+
+### lm ----
+
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+wrongdata <- safe_partialling_out(mod, data = penguins_wrong)
+
+expect_equal(wrongdata$error$message,
+  "Y or X cannot be converted to numeric")
+### feols ----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+wrongdata <- safe_partialling_out(mod, data = penguins_wrong)
+
+expect_equal(wrongdata$error$message,
+  "Y or X cannot be converted to numeric")
+
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+
+wrongdata <- safe_partialling_out(mod, data = penguins_wrong)
+
+expect_equal(wrongdata$error$message,
+  "Y or X cannot be converted to numeric")
+
+
+
+## expect error if all variables are NA ----
+
+df1 <- data.frame("y" = rnorm(1000),
+                  "x1" = rnorm(1000),
+                  "x2"= rnorm(1000))
+nadf <- data.frame("y" = rep(NA, 1000),
+                   "x1" = rep(NA, 1000),
+                   "x2" = rep(NA, 1000))
+
+
+
+### lm ----
+mod <- lm(y ~ x1+ x2, data = df1)
+
+nadata <- safe_partialling_out(mod, nadf)
+
+expect_equal(nadata$error$message,
+  "Y or X cannot be converted to numeric")
+### feols ----
+
+mod <- feols(y ~ x1+ x2, data = df1)
+
+nadata <- safe_partialling_out(mod, nadf)
+
+expect_equal(nadata$error$message,
+  "Y or X cannot be converted to numeric")
+### felm ----
+
+mod <- felm(y ~ x1+ x2, data = df1)
+
+nadata <- safe_partialling_out(mod, nadf)
+
+expect_equal(nadata$error$message,
+  "Y or X cannot be converted to numeric")
 
 
 
 ## expect a warning if partial models are weighted but original model is not ----
 
-
-expect_warning({
-  mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
-  partialling_out(mod, data = penguins, weights = penguins$body_mass_g)})
+quiet_partialling_out <- quietly(partialling_out)
 
 
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
 
-expect_warning({
-  mod <- feols(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = penguins$body_mass_g)})
+weightswarning <- quiet_partialling_out(mod, penguins, weights = penguins$body_mass_g)
+
+expect_equal(weightswarning$warnings,
+  "Original model is not weighted, consider if weights are necessary")
+
+### feols ----
+mod <- feols(bill_length_mm ~  bill_depth_mm | species, data = penguins)
 
 
-expect_warning({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species, data = penguins)
-  partialling_out(mod, data = penguins, weights = penguins$body_mass_g)})
+weightswarning <- quiet_partialling_out(mod, penguins, weights = penguins$body_mass_g)
+
+expect_equal(weightswarning$warnings,
+  "Original model is not weighted, consider if weights are necessary")
+
+### felm ----
+
+mod <- felm(bill_length_mm ~  bill_depth_mm | species, data = penguins)
 
 
+weightswarning <- quiet_partialling_out(mod, penguins, weights = penguins$body_mass_g)
+
+expect_equal(weightswarning$warnings,
+  "Original model is not weighted, consider if weights are necessary")
 
 ## expect a warning if original model is weighted but not partialling_out ----
 
 
-expect_warning({
-  mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins,
-            weights = penguins$body_mass_g)
-  partialling_out(mod, data = penguins)})
+### lm ----
+mod <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins,
+  weights = penguins$body_mass_g)
+
+
+weightswarning <- quiet_partialling_out(mod, penguins)
+
+expect_equal(weightswarning$warnings,
+  "Original model is weighted, consider if weights should be added")
+
+
+### feols ----
+
+mod <- feols(bill_length_mm ~  bill_depth_mm + species, data = penguins,
+  weights = penguins$body_mass_g)
+
+
+weightswarning <- quiet_partialling_out(mod, penguins)
+
+expect_equal(weightswarning$warnings,
+  "Original model is weighted, consider if weights should be added")
+
+### felm ----
+
+nonapenguins <- penguins[!is.na(penguins$body_mass_g), ]
+
+
+mod <- felm(bill_length_mm ~  bill_depth_mm + species, data = nonapenguins,
+  weights = nonapenguins$body_mass_g)
+
+
+weightswarning <- quiet_partialling_out(mod, nonapenguins)
+
+expect_equal(weightswarning$warnings,
+  "Original model is weighted, consider if weights should be added")
 
 
 
-expect_warning({
-  mod <- feols(bill_length_mm ~  bill_depth_mm | species, data = penguins,
-               weights = penguins$body_mass_g)
-  partialling_out(mod, data = penguins)})
+## expect error if weights are included but na are not omitted----
 
 
-expect_warning({
-  mod <- felm(bill_length_mm ~  bill_depth_mm | species,
-              data = penguins[!is.na(penguins$body_mass_g), ],
-              weights = penguins[!is.na(penguins$body_mass_g), ]$body_mass_g)
-  partialling_out(mod, data = penguins[!is.na(penguins$body_mass_g), ])})
-
-
-
-## test that error will occur if weights are included but na are not omitted----
-
-
-
+### lm ----
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
             data = penguins,
             weights = penguins$body_mass_g)
 
 
-expect_error(partialling_out(model, data = penguins,
-                             weights = penguins$body_mass_g,
-                             na.rm = FALSE))
+
+nonarmerror <- safe_partialling_out(model,
+  penguins,
+  weights = penguins$body_mass_g,
+  na.rm = FALSE)
+
+expect_equal(nonarmerror$error$message,
+  "arguments imply differing number of rows: 342, 344")
+
+### feols ----
+
+model <- feols(bill_length_mm ~  bill_depth_mm + species,
+  data = penguins,
+  weights = penguins$body_mass_g)
 
 
-model <- feols(bill_length_mm ~  bill_depth_mm | species,
-               data = penguins,
-               weights = penguins$body_mass_g)
+
+nonarmerror <- safe_partialling_out(model,
+  penguins,
+  weights = penguins$body_mass_g,
+  na.rm = FALSE)
+
+expect_equal(nonarmerror$error$message,
+"arguments imply differing number of rows: 342, 344")
 
 
-expect_error(partialling_out(model, data = penguins,
-                             weights = penguins$body_mass_g,
-                             na.rm = FALSE))
-
-
-df <- penguins[!is.na(penguins$body_mass_g), ]
-
-model <- felm(bill_length_mm ~  bill_depth_mm | species,
-              data = df,
-              weights = df$body_mass_g)
-
-
-expect_error(partialling_out(model,
-                             data = df,
-                             weights = df$body_mass_g,
-                             na.rm = FALSE))
+# felm will not allow a model with missing weights, so not testing
 
 
 
@@ -222,6 +430,7 @@ expect_silent(partialling_out(model,
 NULL
 # nolint end
 
+### lm ----
 
 model <- lm(bill_length_mm ~  bill_depth_mm + species,
             data = penguins)
@@ -233,6 +442,9 @@ sumnames <- unique(unlist(lapply(summaries, names)))
 
 expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
                          "Mean", "3rd Qu.", "Max."))
+
+### feols ----
+
 
 model <- feols(bill_length_mm ~  bill_depth_mm | species,
                data = penguins)
@@ -247,6 +459,7 @@ expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
                          "Mean", "3rd Qu.", "Max."))
 
 
+### fellm ----
 
 model <- felm(bill_length_mm ~  bill_depth_mm | species,
               data = penguins)
@@ -263,7 +476,7 @@ expect_equal(sumnames, c("Min.", "1st Qu.", "Median",
 
 
 
-## test that a non standard dataframe will be accepted---
+## test that a non standard dataframe will be accepted----
 
 # nolint start
 #' @srrstats {G2.7} *`tsibble` objects are accepted and treted like usual data.frames*
@@ -281,15 +494,20 @@ df <- tsibble::tsibble(
   iv4 = units::set_units(rnorm(n), "m/s")
 )
 
+### lm ----
+
 model <- lm(dv ~ iv1 + iv2, data = df)
 
 expect_silent(partialling_out(model, df))
 
+### feols ----
 
 model <- feols(dv ~ iv1 | iv2, data = df)
 
 expect_silent(partialling_out(model, df))
 
+
+### felm ----
 
 
 model <- felm(dv ~ iv1 + iv2, data = df)
@@ -327,8 +545,43 @@ model <- feols(dv ~ iv1 | iv2 + iv3, data = df)
 
 expect_warning(partialling_out(model, df))
 
+## expect error if interaction terms with i() are passed in fixest
+
+m <- feols(bill_length_mm ~ i(species, bill_depth_mm) | sex, data = penguins)
+
+interacterror <- safe_partialling_out(m, penguins)
+
+expect_equal(interacterror$error$message,
+  "Interaction terms as main explanatory variable are not supported")
+
+## test that interaction terms are broken properly ----
+
+### feols ----
+
+m2 <- feols(bill_length_mm ~ bill_depth_mm | sex^species, data = penguins)
+
+expect_silent(partialling_out(m2, penguins))
+
+m3 <- feols(bill_length_mm ~ bill_depth_mm | sex[flipper_length_mm], data = penguins)
+
+expect_warning(partialling_out(m3, penguins)) # this will throw a warning because of interaction terms
+
+m4 <- feols(bill_length_mm ~ bill_depth_mm | sex[[flipper_length_mm]], data = penguins)
+
+expect_warning(partialling_out(m4, penguins)) # this will throw a warning because of interaction terms
 
 
+### lm ----
+
+
+m <- lm(bill_length_mm ~ bill_depth_mm*sex + species, data = penguins)
+
+expect_silent(partialling_out(m, penguins))
+
+m2 <- lm(bill_length_mm ~ bill_depth_mm:sex + species, data = penguins)
+
+
+expect_warning(partialling_out(m2, penguins))
 
 
 # test for results validity ----

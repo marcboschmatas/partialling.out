@@ -53,7 +53,7 @@
 #' @srrstats {EA3.0} *The only implementation of FWL theorem other than manually implementing it includes passing a formula to a function instead of the usual model.*
 #' @srrstats {EA3.1} *Applying the FWL theorem to a regression model can only be done via plotting (using `fwlplot`) or manually defining functions for it.*
 #' @srrstats {EA4.0} *Software returns a data.frame of residualised variables from a regression model*
-#' @srrstats {EA4.1} *EDA Software should implement parameters to enable explicit control of numeric precision*
+#' @srrstats {EA4.1} *Control of numeric precision can be implemented by user via `round` or `signif`*
 #' @srrstats {EA4.2} *Software returns a data.frame, with appropriate `print()`, and `plot()` methods*
 #' @srrstats {EA5.0} *Package does not provide visualisations, but vignettes have been designed to ensure accessibility*
 #' @srrstats {EA5.0a} *Typeface sizes for vignettes have been designed to ensure accessibility*
@@ -94,6 +94,9 @@ partialling_out.lm <- function(model, data = NULL,
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
   } # check data is a df
+  if (nrow(data) == 0) {
+    stop("data has zero rows")
+  } # check no 0 row data has been inputted
 
   # subset and filter data.frame ----
   # subset
@@ -111,6 +114,14 @@ partialling_out.lm <- function(model, data = NULL,
 
   original_nrow <- nrow(data) # for check later
 
+  ## check y or main explanatory variable can be converted to num ----
+
+  asnumy <- as.numeric(data[[formulas$y]])
+  asnumx <- as.numeric(data[[formulas$x]])
+  if (all(is.na(asnumy)) || all(is.na(asnumx))) {
+    stop("Y or X cannot be converted to numeric")
+  }
+
 
   ## remove NA if needed ----
 
@@ -123,6 +134,7 @@ partialling_out.lm <- function(model, data = NULL,
   }else {
     warning("na.rm is set to FALSE and results depend on lm() na_action")
   }
+
 
   # prepare weights ----
 
@@ -166,6 +178,7 @@ partialling_out.lm <- function(model, data = NULL,
     colnames(resdf)[3] <- "weights"
   }
 
+
   return(resdf)
 }
 
@@ -191,6 +204,9 @@ partialling_out.fixest <- function(model, data = NULL,
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
   } # check it is a data.frame
+  if (nrow(data) == 0) {
+    stop("data has zero rows")
+  } # check no 0 row data has been inputted
 
 
   # subset and filter data.frame ----
@@ -208,6 +224,15 @@ partialling_out.fixest <- function(model, data = NULL,
                                       "datetime", "logical"))]) > 0) {
     warning("One or more columns have non standard classes")
   }
+
+  ## check y or main explanatory variable can be converted to num ----
+
+  asnumy <- as.numeric(data[[formulas$y]])
+  asnumx <- as.numeric(data[[formulas$x]])
+  if (all(is.na(asnumy)) || all(is.na(asnumx))) {
+    stop("Y or X cannot be converted to numeric")
+  }
+
 
 
 
@@ -259,8 +284,11 @@ partialling_out.fixest <- function(model, data = NULL,
 
     resdf <- data.frame("y" = data[[formulas$y]],
                         "x" = xres)
-    colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
+
+
   }
+
+
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"
@@ -291,6 +319,9 @@ partialling_out.felm <- function(model, data = NULL,
   if (!("data.frame" %in% class(data))) {
     stop("data input should be a data.frame")
   } # check data is a data.frame
+  if (nrow(data) == 0) {
+    stop("data has zero rows")
+  } # check no 0 row data has been inputted
 
   # subset and filter data.frame
 
@@ -310,6 +341,13 @@ partialling_out.felm <- function(model, data = NULL,
     warning("One or more columns have non standard classes")
   }
 
+  ## check y or main explanatory variable can be converted to num ----
+
+  asnumy <- as.numeric(data[[formulas$y]])
+  asnumx <- as.numeric(data[[formulas$x]])
+  if (all(is.na(asnumy)) || all(is.na(asnumx))) {
+    stop("Y or X cannot be converted to numeric")
+  }
 
   ## remove NA if needed ----
   original_nrow <- nrow(data) # later check
@@ -337,7 +375,7 @@ partialling_out.felm <- function(model, data = NULL,
     stop("Length of weights is not equal to number of observations")
   }
 
-  if (!is.null(weights)) {
+  if (!is.null(weights) && na.rm) {
     weights <- weights[!navec]
   }
 
@@ -361,6 +399,10 @@ partialling_out.felm <- function(model, data = NULL,
                         "x" = xres)
     colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
   }
+
+
+
+
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"

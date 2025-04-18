@@ -12,7 +12,8 @@ partialling_out(model, data, weights, both, na.rm, ...)
 \item{data}{data.frame used in the original model. Using different data will
 return unexpected results or an error.}
 
-\item{weights}{a numeric vector for weighting the partial models}
+\item{weights}{a numeric vector for weighting the partial models. Length must be
+equal to number of rows of \code{data}}
 
 \item{both}{if \code{TRUE} will residualise both the variable of interest and the
 first explanatory variable in the model. If \code{FALSE}, only the latter.
