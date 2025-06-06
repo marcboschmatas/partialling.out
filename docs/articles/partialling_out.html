@@ -52,8 +52,7 @@
 
 
 
-
-<div class="row">
+<script src="partialling_out_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>partialling_out</h1>
@@ -98,10 +97,7 @@
 <span><span class="co">#&gt;   (2 observations deleted due to missingness)</span></span>
 <span><span class="co">#&gt; Multiple R-squared:  0.7892, Adjusted R-squared:  0.7874 </span></span>
 <span><span class="co">#&gt; F-statistic: 421.9 on 3 and 338 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<p>Using the <code>partialling_out</code> function, you can get the
-residualised variable of interest (<code>bill_length_mm</code>) and of
-the first explanatory variable (<code>bill_depth_mm</code>), i.e. it
-would return the residuals of the following two regressions.</p>
+<p>Using the <code>partialling_out</code> function, you can get the residualised variable of interest (<code>bill_length_mm</code>) and of the first explanatory variable (<code>bill_depth_mm</code>), i.e. it would return the residuals of the following two regressions.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
@@ -209,18 +205,14 @@ window.addEventListener('load', function () { styleCell_rrapy1m2305li10rw6b1(6, 
 </table>
 </div>
 <!-- hack to avoid NA insertion in last line -->
-<p>Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the
-model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be
-the same of the coefficient of <code>bill_depth_mm</code> in the
-original model.</p>
+<p>Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">resmodel</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     bill_depth_mm res_bill_depth_mm </span></span>
 <span><span class="co">#&gt;          1.394011          1.394011</span></span></code></pre></div>
-<p>If <code>both</code> is set to <code>FALSE</code>, the function will
-return the actual Y values and the residualised X values.</p>
+<p>If <code>both</code> is set to <code>FALSE</code>, the function will return the actual Y values and the residualised X values.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">penguins</span>, both <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/format_tt.html" class="external-link">format_tt</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -324,12 +316,7 @@ window.addEventListener('load', function () { styleCell_bmj3iklkidrjok56654b(6, 
 <div class="section level3">
 <h3 id="weighted-models">Weighted models<a class="anchor" aria-label="anchor" href="#weighted-models"></a>
 </h3>
-<p>If <code>weights</code> are specified in <code>partialling_out</code>
-they will be used to weight the underlying partial models. The weights
-will also be returned as a column in the result data.frame. If the
-original model is weighted but the partial models aren’t, the function
-will throw a warning (also if the original model is not weighted but
-partial models are).</p>
+<p>If <code>weights</code> are specified in <code>partialling_out</code> they will be used to weight the underlying partial models. The weights will also be returned as a column in the result data.frame. If the original model is weighted but the partial models aren’t, the function will throw a warning (also if the original model is not weighted but partial models are).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span>  <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">species</span>,</span>
 <span>            data <span class="op">=</span> <span class="va">penguins</span>,</span>
@@ -451,9 +438,7 @@ window.addEventListener('load', function () { styleCell_zqv0x2gd4b69pzpxj7ro(6, 
 </table>
 </div>
 <!-- hack to avoid NA insertion in last line -->
-<p>Note that, for the FWL theorem to hold, if the partial models are
-weighted, the linear model between the two residualised variables must
-be weighted as well.</p>
+<p>Note that, for the FWL theorem to hold, if the partial models are weighted, the linear model between the two residualised variables must be weighted as well.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">unweighted_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
 <span></span>
@@ -540,8 +525,7 @@ window.addEventListener('load', function () { styleCell_nlop84sllwu67riupt9a(1, 
 <div class="section level2">
 <h2 id="fixed-effects-models">Fixed effects models<a class="anchor" aria-label="anchor" href="#fixed-effects-models"></a>
 </h2>
-<p>As stated, the model will also work with <code>feols</code> or
-<code>felm</code> models</p>
+<p>As stated, the model will also work with <code>feols</code> or <code>felm</code> models</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lrberge.github.io/fixest/" class="external-link">fixest</a></span><span class="op">)</span></span>
 <span></span>
@@ -760,8 +744,7 @@ window.addEventListener('load', function () { styleCell_qsm915f78fv1dfuxtutf(6, 
 <div class="section level2">
 <h2 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
 </h2>
-<p>Results can then be displayed in a scatterplot either regular or
-binned.</p>
+<p>Results can then be displayed in a scatterplot either regular or binned.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
@@ -785,8 +768,7 @@ binned.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot_add.html" class="external-link">tinyplot_add</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
 <span>             type <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="partialling_out_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
-<p>Plotting all residuals is equivalent to the following approach in
-<code>fwlplot</code></p>
+<p>Plotting all residuals is equivalent to the following approach in <code>fwlplot</code></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/fwlplot/man/fwl_plot.html" class="external-link">fwlplot</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
@@ -795,9 +777,7 @@ binned.</p>
 <div class="section level2">
 <h2 id="adding-other-parameters-to-the-model">Adding other parameters to the model<a class="anchor" aria-label="anchor" href="#adding-other-parameters-to-the-model"></a>
 </h2>
-<p>Any parameters that could be passed to <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>,
-<code><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols()</a></code>, or <code><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm()</a></code>, can be passed to
-<code><a href="../reference/partialling_out.html">partialling_out()</a></code>.</p>
+<p>Any parameters that could be passed to <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>, <code><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols()</a></code>, or <code><a href="https://rdrr.io/pkg/lfe/man/felm.html" class="external-link">felm()</a></code>, can be passed to <code><a href="../reference/partialling_out.html">partialling_out()</a></code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_fixest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">|</span> <span class="va">species</span> <span class="op">+</span> <span class="va">island</span>,</span>
 <span>                      data <span class="op">=</span> <span class="va">penguins</span>, cluster <span class="op">=</span> <span class="op">~</span><span class="va">species</span><span class="op">)</span></span>
@@ -906,10 +886,7 @@ window.addEventListener('load', function () { styleCell_j50m5u79afcb6cj0tgsd(6, 
 <div class="section level2">
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h2>
-<p>To the authors of the <a href="https://github.com/kylebutts/fwlplot" class="external-link">fwlplot</a> package, Kyle
-Butts and Grant McDermott, which has provided inspiration and ideas for
-this project. To my colleague Andreu Arenas-Jal for his insight and
-guiding.</p>
+<p>To the authors of the <a href="https://github.com/kylebutts/fwlplot" class="external-link">fwlplot</a> package, Kyle Butts and Grant McDermott, which has provided inspiration and ideas for this project. To my colleague Andreu Arenas-Jal for his insight and guiding.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

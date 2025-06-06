@@ -56,7 +56,6 @@
 <div class="page-header"><h1 id="partiallingout">partialling.out<a class="anchor" aria-label="anchor" href="#partiallingout"></a>
 </h1></div>
 <!-- badges: start -->
-
 <p>Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with <code>lm</code>, <code>felm</code> (<code>lfe</code>package) and <code>feols</code> (<code>fixest</code> package) for applications of the Frisch-Waugh-Lovell theorem, as explained in Lovell (<a href="doi:10.3200/JECE.39.1.88-91">2008</a>). Whereas this algorithm has already been implemented in <a href="https://github.com/kylebutts/fwlplot" class="external-link"><code>fwlplot</code></a>, this package offers three new characteristics.</p>
 <ul>
 <li><p>It uses an already existing model instead of a formula.</p></li>
@@ -81,7 +80,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/tinyplot/" class="external-link">tinyplot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span>  <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
@@ -153,13 +152,13 @@
 <h2 id="checking-the-results">Checking the results<a class="anchor" aria-label="anchor" href="#checking-the-results"></a>
 </h2>
 <p>The Frisch-Waugh-Lovell theorem states that for a linear model</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><msub><mi>X</mi><mn>2</mn></msub><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> Y = X_1 \beta_1 + X_2\beta_2 + u </annotation></semantics></math></p>
-<p>The coefficient <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mn>2</mn></msub><annotation encoding="application/x-tex">\beta_2</annotation></semantics></math> will be equivalent to that in the regression</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>Y</mi><mo>=</mo><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><msub><mi>X</mi><mn>2</mn></msub><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>u</mi></mrow><annotation encoding="application/x-tex"> M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u </annotation></semantics></math></p>
-<p>Where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><mi>Y</mi></mrow><annotation encoding="application/x-tex">M_{X_1}Y</annotation></semantics></math> are the residuals of the model</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> Y = X_1 \beta_1 + u </annotation></semantics></math></p>
-<p>And <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>X</mi><mn>1</mn></msub></msub><msub><mi>X</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">M_{X_1}X_2</annotation></semantics></math> those of</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><mi>u</mi></mrow><annotation encoding="application/x-tex"> X_2 = X_1 \beta_1 + u </annotation></semantics></math></p>
+<p>[ Y = X_1 \beta_1 + X_2\beta_2 + u](<a href="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%20" class="external-link uri">https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%20</a> " Y = X_1 \beta_1 + X_2\beta_2 + u ")</p>
+<p>The coefficient <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Cbeta_2%20%22%5Cbeta_2%22" alt="\beta_2"> will be equivalent to that in the regression</p>
+<p>[ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u](<a href="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20M_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%20" class="external-link uri">https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20M_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%20</a> " M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u ")</p>
+<p>Where <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_1%7DY%20%22M_%7BX_1%7DY%22" alt="M_{X_1}Y"> are the residuals of the model</p>
+<p>[ Y = X_1 \beta_1 + u](<a href="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20" class="external-link uri">https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20</a> " Y = X_1 \beta_1 + u ")</p>
+<p>And <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_1%7DX_2%20%22M_%7BX_1%7DX_2%22" alt="M_{X_1}X_2"> those of</p>
+<p>[ X_2 = X_1 \beta_1 + u](<a href="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20X_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20" class="external-link uri">https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%20X_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20</a> " X_2 = X_1 \beta_1 + u ")</p>
 <p>Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
@@ -213,6 +212,7 @@
 <li><a href="https://CRAN.R-project.org/package=partialling.out" class="external-link"><img src="https://www.r-pkg.org/badges/version/partialling.out" alt="CRAN status"></a></li>
 <li><a href="https://app.codecov.io/gh/marcboschmatas/partialling.out" class="external-link"><img src="https://codecov.io/gh/marcboschmatas/partialling.out/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/ropensci/software-review/issues/703" class="external-link"><img src="https://badges.ropensci.org/703_status.svg" alt="Status at rOpenSci Software Peer Review"></a></li>
 </ul>
 </div>
 

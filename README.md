@@ -12,6 +12,8 @@ status](https://www.r-pkg.org/badges/version/partialling.out)](https://CRAN.R-pr
 [![Codecov test
 coverage](https://codecov.io/gh/marcboschmatas/partialling.out/graph/badge.svg)](https://app.codecov.io/gh/marcboschmatas/partialling.out)
 [![R-CMD-check](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml)
+[![Status at rOpenSci Software Peer
+Review](https://badges.ropensci.org/703_status.svg)](https://github.com/ropensci/software-review/issues/703)
 <!-- badges: end -->
 
 Partialling out is a package that allows to generate residualised
@@ -23,12 +25,12 @@ already been implemented in
 [`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers
 three new characteristics.
 
-- It uses an already existing model instead of a formula.
+  - It uses an already existing model instead of a formula.
 
-- Works with `lm` and `felm` objects alongside `feols`.
+  - Works with `lm` and `felm` objects alongside `feols`.
 
-- Returns a data.frame with residualised variables instead of a plot,
-  thus offering more freedom of what to do with the results.
+  - Returns a data.frame with residualised variables instead of a plot,
+    thus offering more freedom of what to do with the results.
 
 ## Installation
 
@@ -51,7 +53,7 @@ library(tinytable)
 library(tinyplot)
 library(palmerpenguins)
 
-model <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
 summary(model)
 #> 
 #> Call:
@@ -78,7 +80,7 @@ summary(model)
 
 Using the `partialling_out` function, you can get the residualised
 variable of interest (bill length) and of the first explanatory variable
-(bill_length), i.e. it would return the residuals of the following two
+(bill\_length), i.e. it would return the residuals of the following two
 regressions.
 
 ``` r
@@ -96,32 +98,50 @@ tt(head(res)) |>
   style_tt(align = "c")
 ```
 
-| res_bill_length_mm | res_bill_depth_mm |
-|--------------------|-------------------|
-| 0.31               | 0.35              |
-| 0.71               | -0.95             |
-| 1.51               | -0.35             |
-| -2.09              | 0.95              |
-| 0.51               | 2.25              |
-| 0.11               | -0.55             |
+| res\_bill\_length\_mm | res\_bill\_depth\_mm |
+| --------------------- | -------------------- |
+| 0.31                  | 0.35                 |
+| 0.71                  | \-0.95               |
+| 1.51                  | \-0.35               |
+| \-2.09                | 0.95                 |
+| 0.51                  | 2.25                 |
+| 0.11                  | \-0.55               |
 
 ## Checking the results
 
 The Frisch-Waugh-Lovell theorem states that for a linear model
 
-$$ Y = X_1 \beta_1 + X_2\beta_2 + u $$
+  
+![ Y = X\_1 \\beta\_1 + X\_2\\beta\_2 + u
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%20
+" Y = X_1 \\beta_1 + X_2\\beta_2 + u ")  
 
-The coefficient $\beta_2$ will be equivalent to that in the regression
+The coefficient
+![\\beta\_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_2
+"\\beta_2") will be equivalent to that in the regression
 
-$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u $$
+  
+![ M\_{X\_1} Y = M\_{X\_1}X\_2\\beta\_2 + M\_{X\_1}u
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20M_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%20
+" M_{X_1} Y = M_{X_1}X_2\\beta_2 + M_{X_1}u ")  
 
-Where $M_{X_1}Y$ are the residuals of the model
+Where
+![M\_{X\_1}Y](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;M_%7BX_1%7DY
+"M_{X_1}Y") are the residuals of the model
 
-$$ Y = X_1 \beta_1 + u $$
+  
+![ Y = X\_1 \\beta\_1 + u
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20
+" Y = X_1 \\beta_1 + u ")  
 
-And $M_{X_1}X_2$ those of
+And
+![M\_{X\_1}X\_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;M_%7BX_1%7DX_2
+"M_{X_1}X_2") those of
 
-$$ X_2 = X_1 \beta_1 + u $$
+  
+![ X\_2 = X\_1 \\beta\_1 + u
+](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20X_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20
+" X_2 = X_1 \\beta_1 + u ")  
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model
 `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the

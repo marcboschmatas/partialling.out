@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/partialling.out)](https://CRAN.R-project.org/package=partialling.out)
 [![Codecov test coverage](https://codecov.io/gh/marcboschmatas/partialling.out/graph/badge.svg)](https://app.codecov.io/gh/marcboschmatas/partialling.out)
 [![R-CMD-check](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/marcboschmatas/partialling.out/actions/workflows/R-CMD-check.yaml)
+[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/703_status.svg)](https://github.com/ropensci/software-review/issues/703)
 <!-- badges: end -->
 
 Partialling out is a package that allows to generate residualised variables of already existing linear or fixed effects models. So far it works with `lm`, `felm` (`lfe`package) and `feols`  (`fixest` package) for applications of the Frisch-Waugh-Lovell theorem, as explained in Lovell ([2008](doi:10.3200/JECE.39.1.88-91)). Whereas this algorithm has already been implemented in [`fwlplot`](https://github.com/kylebutts/fwlplot), this package offers three new characteristics.
@@ -53,7 +54,7 @@ library(tinytable)
 library(tinyplot)
 library(palmerpenguins)
 
-model <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
 summary(model)
 ```
 
