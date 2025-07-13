@@ -1,4 +1,3 @@
-
 # nolint start
 #' Extracts the partial formulas from the original model
 #' plus a vector of all terms to filter the model data.frame before filtering
@@ -34,42 +33,51 @@ prepare_formula.lm <- function(model, both = TRUE) {
   # extract interest variable ----
   y <- as.character(attr(terms_obj, "variables"))[2]
   # extract main explanatory variable ----
-  x <-  attr(terms_obj, "term.labels")[1]
+  x <- attr(terms_obj, "term.labels")[1]
   # extract controls ----
   controls <- attr(terms_obj, "term.labels")[-1]
 
-  # prepare filter terms object ----
-  filter_terms <- c(y, x, controls)
-  filter_terms <- trimws(unlist(lapply(filter_terms,
-                                       strsplit,
-                                       split = "\\:|\\*")))
-  filter_terms <- unique(filter_terms)
   if (length(controls) == 0) {
     stop("No control variables found in the model.")
   }
+
+  # check that no poly or asis expressions are used
+  if (grepl("I\\(|poly\\(", x) || TRUE %in% grepl("I\\(|poly\\(", controls)) {
+    stop("AsIs and poly expressions are not supported")
+  }
+  # prepare filter terms object ----
+  filter_terms <- c(y, x, controls)
+  filter_terms <- trimws(unlist(lapply(
+    filter_terms,
+    strsplit,
+    split = "\\:|\\*"
+  )))
+  filter_terms <- unique(filter_terms)
+
   # make formulas ----
   if (both) {
     # make formula for y on controls
     formulay <- paste0(y, " ~ ", paste0(controls, collapse = " + "))
     # make formula for 1st x on controls
     formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list("filter_terms" = filter_terms,
-                "formulay" = formulay,
-                "formulax" = formulax,
-                "y" = y,
-                "x" = x)
-
-  }else {
+    out <- list(
+      "filter_terms" = filter_terms,
+      "formulay" = formulay,
+      "formulax" = formulax,
+      "y" = y,
+      "x" = x
+    )
+  } else {
     formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list("filter_terms" = filter_terms,
-                "formulax" = formulax,
-                "y" = y,
-                "x" = x)
+    out <- list(
+      "filter_terms" = filter_terms,
+      "formulax" = formulax,
+      "y" = y,
+      "x" = x
+    )
   }
   return(out)
 }
-
-
 
 
 #' @importFrom stats formula
@@ -81,16 +89,21 @@ prepare_formula.fixest <- function(model, both = TRUE) {
   # extract interest variable ----
   y <- as.character(attr(terms_obj, "variables"))[2]
   # extract main explanatory variable and controls / fixed effects ----
-  rhs <-  attr(terms_obj, "term.labels")
+  rhs <- attr(terms_obj, "term.labels")
+
+  if (TRUE %in% grepl("I\\(|poly\\(", rhs)) {
+    stop("AsIs and poly expressions are not supported")
+  }
 
   # generate the vector of all elements to later subset data.frame ----
   filter_terms <- gsub("i\\(", "", rhs) # remove interactions
   filter_terms <- gsub("\\)", "", filter_terms)
-  filter_terms <- trimws(unlist(strsplit(filter_terms,
-                                         ",|\\+|\\||\\^|\\[{1,2}|\\]{1,2}")))
+  filter_terms <- trimws(unlist(strsplit(
+    filter_terms,
+    ",|\\+|\\||\\^|\\[{1,2}|\\]{1,2}"
+  )))
   filter_terms <- c(y, filter_terms)
   filter_terms <- unique(filter_terms)
-
 
   # get explanatory variables, fe & inst vars ----
   rhs_split <- unlist(strsplit(rhs, "\\|"))
@@ -120,31 +133,28 @@ prepare_formula.fixest <- function(model, both = TRUE) {
   rhs2 <- rhs2[!is.na(rhs2)]
   rhs2 <- paste0(rhs2, collapse = " | ")
 
-
   if (both) {
     formulay <- paste(y, rhs2, sep = " ~ ")
     formulax <- paste(main_expvar, rhs2, sep = " ~ ")
-    out <- list("filter_terms" = filter_terms,
-                "formulay" = formulay,
-                "formulax" = formulax,
-                "y" = y,
-                "x" = main_expvar)
-
-  }else {
-
+    out <- list(
+      "filter_terms" = filter_terms,
+      "formulay" = formulay,
+      "formulax" = formulax,
+      "y" = y,
+      "x" = main_expvar
+    )
+  } else {
     formulax <- paste(main_expvar, rhs2, sep = " ~ ")
 
-    out <- list("filter_terms" = c(y, x, controls),
-                "formulax" = formulax,
-                "y" = y,
-                "x" = main_expvar)
-
+    out <- list(
+      "filter_terms" = c(y, x, controls),
+      "formulax" = formulax,
+      "y" = y,
+      "x" = main_expvar
+    )
   }
   return(out)
 }
-
-
-
 
 #' @importFrom stats formula
 #' @importFrom stats terms
@@ -155,13 +165,15 @@ prepare_formula.felm <- function(model, both = TRUE) {
   # extract interest variable ----
   y <- as.character(attr(terms_obj, "variables"))[2]
   # extract main explanatory variable and controls / fixed effects ----
-  rhs <-  attr(terms_obj, "term.labels")
+  rhs <- attr(terms_obj, "term.labels")
+
+  if (TRUE %in% grepl("I\\(|poly\\(", rhs)) {
+    stop("AsIs and poly expressions are not supported")
+  }
 
   # generate the vector of all elements to later subset data.frame
   filter_terms <- trimws(unlist(strsplit(rhs, "\\+|\\||\\*|\\:")))
   filter_terms <- c(y, filter_terms)
-
-
   # get explanatory variables, fe, inst vars, and error clusters ----
   rhs_split <- unlist(strsplit(rhs, "\\|"))
   # main explanatory variable and controls ----
@@ -194,20 +206,22 @@ prepare_formula.felm <- function(model, both = TRUE) {
   if (both) {
     formulay <- paste(y, rhs2, sep = " ~ ")
     formulax <- paste(main_expvar, rhs2, sep = " ~ ")
-    out <- list("filter_terms" = filter_terms,
-                "formulay" = formulay,
-                "formulax" = formulax,
-                "y" = y,
-                "x" = main_expvar)
-
-  }else {
-
+    out <- list(
+      "filter_terms" = filter_terms,
+      "formulay" = formulay,
+      "formulax" = formulax,
+      "y" = y,
+      "x" = main_expvar
+    )
+  } else {
     formulax <- paste(main_expvar, rhs2, sep = " ~ ")
 
-    out <- list("filter_terms" = c(y, x, controls),
-                "formulax" = formulax,
-                "y" = y,
-                "x" = main_expvar)
+    out <- list(
+      "filter_terms" = c(y, x, controls),
+      "formulax" = formulax,
+      "y" = y,
+      "x" = main_expvar
+    )
   }
 
   return(out)
