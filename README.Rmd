@@ -106,6 +106,9 @@ resmodel <- lm(res_bill_length_mm ~ res_bill_depth_mm, data = res)
 print(c(model$coefficients[2], resmodel$coefficients[2]))
 ```
 
+## Contributing
+
+Contributing instructions can be found [here](https://github.com/marcboschmatas/partialling.out/blob/main/.github/contributing.md)
 
 
 ## Acknowledgements

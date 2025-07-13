@@ -155,6 +155,11 @@ print(c(model$coefficients[2], resmodel$coefficients[2]))
 #>          1.394011          1.394011
 ```
 
+## Contributing
+
+Contributing instructions can be found
+[here](https://github.com/marcboschmatas/partialling.out/blob/main/.github/contributing.md)
+
 ## Acknowledgements
 
 To the authors of the [fwlplot](https://github.com/kylebutts/fwlplot)

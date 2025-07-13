@@ -30,7 +30,7 @@ library(tinytable)
 library(tinyplot)
 library(palmerpenguins)
 library(fwlplot)
-model <- lm(bill_length_mm ~  bill_depth_mm + species, data = penguins)
+model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
 summary(model)
 ```
 
@@ -80,11 +80,12 @@ If `weights` are specified in `partialling_out` they will be used to weight the 
 
 
 ```{r}
-model <- lm(bill_length_mm ~  bill_depth_mm + species,
-            data = penguins,
-            weights = penguins$body_mass_g)
-res <- partialling_out(model, data = penguins,
-                       weights = penguins$body_mass_g)
+model <- lm(
+  bill_length_mm ~ bill_depth_mm + species,
+  data = penguins,
+  weights = penguins$body_mass_g
+)
+res <- partialling_out(model, data = penguins, weights = penguins$body_mass_g)
 
 
 tt(head(res)) |>
@@ -100,13 +101,18 @@ Note that, for the FWL theorem to hold, if the partial models are weighted, the 
 ```{r}
 unweighted_model <- lm(res_bill_length_mm ~ res_bill_depth_mm, data = res)
 
-weighted_model <- lm(res_bill_length_mm ~  res_bill_depth_mm,
-                     weights = res$weights, data = res)
+weighted_model <- lm(
+  res_bill_length_mm ~ res_bill_depth_mm,
+  weights = res$weights,
+  data = res
+)
 
 
-data.frame("original model" = model$coefficients[2],
-           "unweighted model" = unweighted_model$coefficients[2],
-           "weighted_model" = weighted_model$coefficients[2]) |>
+data.frame(
+  "original model" = model$coefficients[2],
+  "unweighted model" = unweighted_model$coefficients[2],
+  "weighted_model" = weighted_model$coefficients[2]
+) |>
   tt() |>
   format_tt(digits = 4) |>
   style_tt(align = "c")
@@ -119,8 +125,7 @@ As stated, the model will also work with `feols` or `felm` models
 ```{r}
 library(fixest)
 
-model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species,
-                      data = penguins)
+model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 
 res_fixest <- partialling_out(model_fixest, data = penguins)
 tt(head(res_fixest)) |>
@@ -132,8 +137,7 @@ tt(head(res_fixest)) |>
 ```{r}
 library(lfe)
 
-model_lfe <- felm(bill_length_mm ~ bill_depth_mm | species,
-                  data = penguins)
+model_lfe <- felm(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 
 res_lfe <- partialling_out(model_lfe, data = penguins)
 
@@ -143,7 +147,40 @@ tt(head(res_lfe)) |>
   style_tt(align = "c")
 ```
 
+## Interaction terms and varying slopes
 
+So far, interaction terms with `:`, `*`, or `^` (in `feols`) as well as varying slopes in `feols` with `[` or `[[` are supported only for variables other than the main explanatory variable, i.e.
+
+```{r}
+#| eval: false
+
+feols(bill_depth_mm ~ bill_length_mm | species^sex, data = penguins) |>
+  partialling_out()
+```
+is supported, but
+
+```{r}
+#| eval: false
+
+feols(bill_depth_mm ~ i(bill_length_mm, species) | sex, data = penguins) |>
+  partialling_out()
+```
+
+will yield an error. Therefore, if your main explanatory variable is an interaction, it should be built outside the model if you intend to partial it out afterwards.
+
+### AsIs and polynomial terms
+
+So far, AsIs expressions, and polynomial terms in the formula are not yet supported, so these two expressions will yield an error.
+
+```{r}
+#| eval: false
+partialling_out(lm(bill_depth_mm ~ I(bill_length_mm^2) + species,
+                   data = penguins))
+
+partialling_out(lm(bill_depth_mm ~  poly(bill_length_mm, 2) + species,
+                   data = penguins[!is.na(penguins$bill_length_mm), ]))
+
+```
 
 ## Plotting the results
 
@@ -156,21 +193,29 @@ par(mfrow = c(2, 1))
 
 
 tinyplot(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm)
-tinyplot_add(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
-             type = "lm")
+tinyplot_add(
+  res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
+  type = "lm"
+)
 
-res_fixest$qnt <- cut(res_fixest$res_bill_depth_mm,
-                      breaks = quantile(res_fixest$res_bill_depth_mm,
-                                        probs = seq(0, 1, .02)),
-                      include.lowest = TRUE)
+res_fixest$qnt <- cut(
+  res_fixest$res_bill_depth_mm,
+  breaks = quantile(res_fixest$res_bill_depth_mm, probs = seq(0, 1, .02)),
+  include.lowest = TRUE
+)
 
 
-res_qnt <- aggregate(cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
-                     data = res_fixest, FUN = mean)
+res_qnt <- aggregate(
+  cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
+  data = res_fixest,
+  FUN = mean
+)
 
 tinyplot(res_qnt$res_bill_length_mm ~ res_qnt$res_bill_depth_mm)
-tinyplot_add(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
-             type = "lm")
+tinyplot_add(
+  res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
+  type = "lm"
+)
 ```
 
 Plotting all residuals is equivalent to the following approach in `fwlplot`
@@ -187,8 +232,11 @@ fwlplot(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 Any parameters that could be passed to `lm()`, `feols()`, or `felm()`, can be passed to  `partialling_out()`.
 
 ```{r}
-model_fixest <- feols(bill_length_mm ~ bill_depth_mm | species + island,
-                      data = penguins, cluster = ~species)
+model_fixest <- feols(
+  bill_length_mm ~ bill_depth_mm | species + island,
+  data = penguins,
+  cluster = ~species
+)
 
 
 tt(head(partialling_out(model_fixest, data = penguins, cluster = ~species))) |>
