@@ -425,7 +425,6 @@ expect_equal(
 )
 
 ### feols ----
-model <- felm(dv ~ iv1 + iv4 | iv2, data = df)
 
 model <- feols(
   bill_length_mm ~ bill_depth_mm + species,
