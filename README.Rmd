@@ -83,20 +83,28 @@ tt(head(res)) |>
 
 The Frisch-Waugh-Lovell theorem states that for a linear model
 
-$$ Y = X_1 \beta_1 + X_2\beta_2 + u $$
+$$
+Y = X_0 \beta_1 + X_2\beta_2 + u
+$$
 
 The coefficient $\beta_2$ will be equivalent to that in the regression
 
-$$ M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u $$
+$$
+M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u
+$$
 
 Where $M_{X_1}Y$ are the residuals of the model
 
-$$ Y = X_1 \beta_1 + u $$
+$$
+Y = X_1 \beta_1 + u
+$$
 
 And $M_{X_1}X_2$ those of 
 
 
-$$ X_2 = X_1 \beta_1 + u $$
+$$
+X_2 = X_1 \beta_1 + u
+$$
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the coefficient of `bill_depth_mm` in the original model.
 

@@ -112,36 +112,44 @@ tt(head(res)) |>
 The Frisch-Waugh-Lovell theorem states that for a linear model
 
   
-![ Y = X\_1 \\beta\_1 + X\_2\\beta\_2 + u
-](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%20
-" Y = X_1 \\beta_1 + X_2\\beta_2 + u ")  
+![&#10;Y = X\_0 \\beta\_1 + X\_2\\beta\_2 +
+u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AY%20%3D%20X_0%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%0A
+"
+Y = X_0 \\beta_1 + X_2\\beta_2 + u
+")  
 
 The coefficient
 ![\\beta\_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_2
 "\\beta_2") will be equivalent to that in the regression
 
   
-![ M\_{X\_1} Y = M\_{X\_1}X\_2\\beta\_2 + M\_{X\_1}u
-](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20M_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%20
-" M_{X_1} Y = M_{X_1}X_2\\beta_2 + M_{X_1}u ")  
+![&#10;M\_{X\_1} Y = M\_{X\_1}X\_2\\beta\_2 +
+M\_{X\_1}u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AM_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%0A
+"
+M_{X_1} Y = M_{X_1}X_2\\beta_2 + M_{X_1}u
+")  
 
 Where
 ![M\_{X\_1}Y](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;M_%7BX_1%7DY
 "M_{X_1}Y") are the residuals of the model
 
   
-![ Y = X\_1 \\beta\_1 + u
-](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20Y%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20
-" Y = X_1 \\beta_1 + u ")  
+![&#10;Y = X\_1 \\beta\_1 +
+u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AY%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%0A
+"
+Y = X_1 \\beta_1 + u
+")  
 
 And
 ![M\_{X\_1}X\_2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;M_%7BX_1%7DX_2
 "M_{X_1}X_2") those of
 
   
-![ X\_2 = X\_1 \\beta\_1 + u
-](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20X_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%20
-" X_2 = X_1 \\beta_1 + u ")  
+![&#10;X\_2 = X\_1 \\beta\_1 +
+u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AX_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%0A
+"
+X_2 = X_1 \\beta_1 + u
+")  
 
 Accordingly, the coefficient of `res_bill_depth_mm` in the model
 `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the
