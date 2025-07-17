@@ -84,9 +84,7 @@ variable of interest (bill length) and of the first explanatory variable
 regressions.
 
 ``` r
-
 modely <- lm(bill_length_mm ~ species, data = penguins)
-
 modelx <- lm(bill_depth_mm ~ species, data = penguins)
 ```
 
@@ -112,29 +110,20 @@ tt(head(res)) |>
 The Frisch-Waugh-Lovell theorem states that for a linear model
 
 ``` math
-Y = X_0 \beta_1 + X_2\beta_2 + u
+Y = X_1 \beta_1 + X_2 \beta_2 + u
 ```
 
-The coefficient $\beta_2$ will be equivalent to that in the regression
+The coefficient $\hat{\beta}_1$ will be equivalent to the coefficient,
+$\tilde{\beta}_1$, from the regression of
 
 ``` math
-M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u
+M_{X_2} Y = M_{X_2} X_1 \beta_1 + M_{X_1} u
 ```
 
-Where $M_{X_1}Y$ are the residuals of the model
+Where $M_{X_2} Y$ are the residuals of the regression of $Y$ on $X_2$
+and $M_{X_2}X_1$ are the residuals of the regression of $X_1$ on $X_2$.
 
-``` math
-Y = X_1 \beta_1 + u
-```
-
-And $M_{X_1}X_2$ those of
-
-``` math
-X_2 = X_1 \beta_1 + u
-```
-
-<br/>
-Accordingly, the coefficient of `res_bill_depth_mm` in the model
+<br/> Accordingly, the coefficient of `res_bill_depth_mm` in the model
 `lm(res_bill_length_mm ~ res_bill_depth_mm)` will be the same of the
 coefficient of `bill_depth_mm` in the original model.
 
