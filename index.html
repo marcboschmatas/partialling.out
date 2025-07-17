@@ -107,9 +107,7 @@
 <span><span class="co">#&gt; F-statistic: 421.9 on 3 and 338 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>Using the <code>partialling_out</code> function, you can get the residualised variable of interest (bill length) and of the first explanatory variable (bill_length), i.e. it would return the residuals of the following two regressions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span><span class="va">modelx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_depth_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
@@ -154,39 +152,12 @@
 <h2 id="checking-the-results">Checking the results<a class="anchor" aria-label="anchor" href="#checking-the-results"></a>
 </h2>
 <p>The Frisch-Waugh-Lovell theorem states that for a linear model</p>
-<div class="float">
-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%0AY%20%3D%20X_0%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%0A%20%22%20Y%20=%20X_0%20%5Cbeta_1%20+%20X_2%5Cbeta_2%20+%20u%20%22" alt="
-Y = X_0 \beta_1 + X_2\beta_2 + u
-"><div class="figcaption">
-Y = X_0 \beta_1 + X_2\beta_2 + u
-</div>
-</div>
-<p>The coefficient <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Cbeta_2%20%22%5Cbeta_2%22" alt="\beta_2"> will be equivalent to that in the regression</p>
-<div class="float">
-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%0AM_%7BX_1%7D%20Y%20%3D%20M_%7BX_1%7DX_2%5Cbeta_2%20%2B%20M_%7BX_1%7Du%0A%20%22%20M_%7BX_1%7D%20Y%20=%20M_%7BX_1%7DX_2%5Cbeta_2%20+%20M_%7BX_1%7Du%20%22" alt="
-M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u
-"><div class="figcaption">
-M_{X_1} Y = M_{X_1}X_2\beta_2 + M_{X_1}u
-</div>
-</div>
-<p>Where <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_1%7DY%20%22M_%7BX_1%7DY%22" alt="M_{X_1}Y"> are the residuals of the model</p>
-<div class="float">
-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%0AY%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%0A%20%22%20Y%20=%20X_1%20%5Cbeta_1%20+%20u%20%22" alt="
-Y = X_1 \beta_1 + u
-"><div class="figcaption">
-Y = X_1 \beta_1 + u
-</div>
-</div>
-<p>And <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_1%7DX_2%20%22M_%7BX_1%7DX_2%22" alt="M_{X_1}X_2"> those of</p>
-<div class="float">
-<img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%0AX_2%20%3D%20X_1%20%5Cbeta_1%20%2B%20u%0A%20%22%20X_2%20=%20X_1%20%5Cbeta_1%20+%20u%20%22" alt="
-X_2 = X_1 \beta_1 + u
-"><div class="figcaption">
-X_2 = X_1 \beta_1 + u
-</div>
-</div>
-<p>Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<pre class="math"><code>Y = X_1 \beta_1 + X_2 \beta_2 + u</code></pre>
+<p>The coefficient <span class="math inline">\hat{\beta}_1</span> will be equivalent to the coefficient, <span class="math inline">\tilde{\beta}_1</span>, from the regression of</p>
+<pre class="math"><code>M_{X_2} Y = M_{X_2} X_1 \beta_1 + M_{X_1} u</code></pre>
+<p>Where <span class="math inline">M_{X_2} Y</span> are the residuals of the regression of <span class="math inline">Y</span> on <span class="math inline">X_2</span> and <span class="math inline">M_{X_2}X_1</span> are the residuals of the regression of <span class="math inline">X_1</span> on <span class="math inline">X_2</span>.</p>
+<p><br> Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">resmodel</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
