@@ -82,10 +82,12 @@ tt(head(res)) |>
 ## Checking the results
 
 The Frisch-Waugh-Lovell theorem states that for a linear model
+```{r, results = "asis", echo = FALSE}
 
-$$
-Y = X_0 \beta_1 + X_2\beta_2 + u
-$$
+cat("$$\nY = X_0 \\beta_1 + X_2 \\beta_2 + u\n$$")
+```
+
+
 
 The coefficient $\beta_2$ will be equivalent to that in the regression
 

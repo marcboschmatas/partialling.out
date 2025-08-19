@@ -109,13 +109,11 @@ tt(head(res)) |>
 
 ## Checking the results
 
-The Frisch-Waugh-Lovell theorem states that for a linear model
-
-  
-![&#10;Y = X\_0 \\beta\_1 + X\_2\\beta\_2 +
-u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AY%20%3D%20X_0%20%5Cbeta_1%20%2B%20X_2%5Cbeta_2%20%2B%20u%0A
+The Frisch-Waugh-Lovell theorem states that for a linear model   
+![&#10;Y = X\_0 \\beta\_1 + X\_2 \\beta\_2 +
+u&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AY%20%3D%20X_0%20%5Cbeta_1%20%2B%20X_2%20%5Cbeta_2%20%2B%20u%0A
 "
-Y = X_0 \\beta_1 + X_2\\beta_2 + u
+Y = X_0 \\beta_1 + X_2 \\beta_2 + u
 ")  
 
 The coefficient
