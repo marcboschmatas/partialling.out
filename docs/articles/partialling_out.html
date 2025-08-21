@@ -790,37 +790,15 @@
 <div class="section level2">
 <h2 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
 </h2>
-<p>Results can then be displayed in a scatterplot either regular or binned.</p>
+<p>The library includes the function <code><a href="../reference/plot_partial_residuals.html">plot_partial_residuals()</a></code> to plot a scatterplot of the residualised variables with a tendence line (which can be disabled if the parametre <code>add_lm</code> is set to <code>FALSE</code>) using <a href="https://github.com/grantmcdermott/tinyplot/" class="external-link"><code>tinyplot</code></a> as backend. If the parametre <code>quantile</code> is set to <code>TRUE</code> it will divide the main explanatory variable in the specified number of quantiles (by default, 50) and plot the mean values for X and Y for each quantile.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinytheme.html" class="external-link">tinytheme</a></span><span class="op">(</span><span class="st">"tufte"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot_add.html" class="external-link">tinyplot_add</a></span><span class="op">(</span></span>
-<span>  <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"lm"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">res_fixest</span><span class="op">$</span><span class="va">qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span></span>
-<span>  <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>  breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">.02</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  include.lowest <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="va">res_qnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">res_bill_depth_mm</span>, <span class="va">res_bill_length_mm</span><span class="op">)</span> <span class="op">~</span> <span class="va">qnt</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">res_fixest</span>,</span>
-<span>  FUN <span class="op">=</span> <span class="va">mean</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot.html" class="external-link">tinyplot</a></span><span class="op">(</span><span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_qnt</span><span class="op">$</span><span class="va">res_bill_depth_mm</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/tinyplot/man/tinyplot_add.html" class="external-link">tinyplot_add</a></span><span class="op">(</span></span>
-<span>  <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_fixest</span><span class="op">$</span><span class="va">res_bill_depth_mm</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"lm"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot_partial_residuals.html">plot_partial_residuals</a></span><span class="op">(</span><span class="va">res_fixest</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_partial_residuals.html">plot_partial_residuals</a></span><span class="op">(</span><span class="va">res_fixest</span>, quantile <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="partialling_out_files/figure-html/unnamed-chunk-14-1.png" width="576"></p>
 <p>Plotting all residuals is equivalent to the following approach in <code>fwlplot</code></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">

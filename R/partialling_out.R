@@ -197,9 +197,9 @@ partialling_out.lm <- function(
     colnames(resdf)[3] <- "weights"
   }
 
-  # give partial_residual class to resdf to make plot method
+  # give partial_residuals class to resdf to make plot method
 
-  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
+  resdf <- structure(resdf, class = c("partial_residuals", "data.frame"))
 
   return(resdf)
 }
@@ -330,8 +330,8 @@ partialling_out.fixest <- function(
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"
   }
-  # give partial_residual class to resdf to make plot method
-  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
+  # give partial_residuals class to resdf to make plot method
+  resdf <- structure(resdf, class = c("partial_residuals", "data.frame"))
 
   return(resdf)
 }
@@ -466,9 +466,9 @@ partialling_out.felm <- function(
     colnames(resdf)[3] <- "weights"
   }
 
-  # give partial_residual class to resdf to make plot method
+  # give partial_residuals class to resdf to make plot method
 
-  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
+  resdf <- structure(resdf, class = c("partial_residuals", "data.frame"))
 
   return(resdf)
 }

@@ -9,7 +9,7 @@ License: GPL (>= 3)
 BugReports: https://github.com/marcboschmatas/partialling.out/issues
 Suggests: 
     tinytest,
-    tinyplot,
+    tinysnapshot,
     knitr,
     rmarkdown,
     palmerpenguins,
@@ -17,7 +17,10 @@ Suggests:
     fwlplot,
     tsibble,
     units,
-    purrr
+    purrr,
+    fontquiver,
+    rsvg,
+    svglite
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
@@ -29,5 +32,6 @@ Imports:
     rlang,
     fixest,
     lfe,
-    stats
+    stats,
+    tinyplot
 URL: https://marcboschmatas.github.io/partialling.out/

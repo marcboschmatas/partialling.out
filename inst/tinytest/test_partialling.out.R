@@ -1,12 +1,14 @@
-# Placeholder with simple test
 library(palmerpenguins)
 library(fixest)
 library(lfe)
 library(tinytest)
+library(tinysnapshot)
 library(partialling.out)
 library(tsibble)
 library(units)
 library(purrr)
+library(tinyplot)
+source("helpers.R") # helpers for snapshot test
 
 
 penguins <- penguins
@@ -864,20 +866,20 @@ model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
-expect_true("partial_residual" %in% class(res))
+expect_true("partial_residuals" %in% class(res))
 
 model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
-expect_true("partial_residual" %in% class(res))
+expect_true("partial_residuals" %in% class(res))
 
 
 model <- felm(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
-expect_true("partial_residual" %in% class(res))
+expect_true("partial_residuals" %in% class(res))
 
 
 ## test that it returns a data.frame of two columns if unweighted ----
@@ -1039,3 +1041,43 @@ res <- partialling_out(model, data = penguins)
 navec <- apply(res, 1, function(x) any(is.infinite(x)))
 
 expect_false(unique(navec))
+
+
+# test plot ----
+
+## lm no quantile ----
+model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
+res <- partialling_out(model, data = penguins)
+p1 <- function() plot_partial_residuals(res)
+
+expect_snapshot_plot(p1, label = "lm no quantile")
+
+tinytheme() # clean up theme
+
+
+## lm quantile ----
+model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
+res <- partialling_out(model, data = penguins)
+p1 <- function() plot_partial_residuals(res, quantile = TRUE)
+
+expect_snapshot_plot(p1, label = "lm quantile")
+
+tinytheme() # clean up theme
+
+## no lm no quantile ----
+model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
+res <- partialling_out(model, data = penguins)
+p1 <- function() plot_partial_residuals(res, add_lm = FALSE, quantile = FALSE)
+
+expect_snapshot_plot(p1, label = "no lm no quantile")
+
+tinytheme() # clean up theme
+
+## no lm quantile ----
+model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
+res <- partialling_out(model, data = penguins)
+p1 <- function() plot_partial_residuals(res, add_lm = FALSE, quantile = TRUE)
+
+expect_snapshot_plot(p1, label = "no lm quantile")
+
+tinytheme() # clean up theme

@@ -184,7 +184,8 @@ partialling_out(lm(bill_depth_mm ~  poly(bill_length_mm, 2) + species,
 
 ## Plotting the results
 
-Results can then be displayed in a scatterplot either regular or binned.
+The library includes the function `plot_partial_residuals()` to plot a scatterplot of the residualised variables with a tendence line (which can be disabled if the parametre `add_lm` is set to `FALSE`) using [`tinyplot`](https://github.com/grantmcdermott/tinyplot/) as backend. If the parametre `quantile` is set to `TRUE` it will divide the main explanatory variable in the specified number of quantiles (by default, 50) and plot the mean values for X and Y for each quantile.
+
 
 ```{r fig.height = 8, fig.width = 6}
 
@@ -192,30 +193,8 @@ tinytheme("tufte")
 par(mfrow = c(2, 1))
 
 
-tinyplot(res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm)
-tinyplot_add(
-  res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
-  type = "lm"
-)
-
-res_fixest$qnt <- cut(
-  res_fixest$res_bill_depth_mm,
-  breaks = quantile(res_fixest$res_bill_depth_mm, probs = seq(0, 1, .02)),
-  include.lowest = TRUE
-)
-
-
-res_qnt <- aggregate(
-  cbind(res_bill_depth_mm, res_bill_length_mm) ~ qnt,
-  data = res_fixest,
-  FUN = mean
-)
-
-tinyplot(res_qnt$res_bill_length_mm ~ res_qnt$res_bill_depth_mm)
-tinyplot_add(
-  res_fixest$res_bill_length_mm ~ res_fixest$res_bill_depth_mm,
-  type = "lm"
-)
+plot_partial_residuals(res_fixest)
+plot_partial_residuals(res_fixest, quantile = TRUE)
 ```
 
 Plotting all residuals is equivalent to the following approach in `fwlplot`
@@ -225,7 +204,6 @@ Plotting all residuals is equivalent to the following approach in `fwlplot`
 fwlplot(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 
 ```
-
 
 ## Adding other parameters to the model
 

@@ -72,7 +72,6 @@ The workflow for `partialling.out` is rather simple: first, create a linear or f
 ```{r}
 library(partialling.out)
 library(tinytable)
-library(tinyplot)
 library(palmerpenguins)
 
 model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)

@@ -89,7 +89,6 @@ linear or fixed effects model.
 ``` r
 library(partialling.out)
 library(tinytable)
-library(tinyplot)
 library(palmerpenguins)
 
 model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
