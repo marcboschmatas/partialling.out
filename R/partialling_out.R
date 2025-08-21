@@ -173,7 +173,8 @@ partialling_out.lm <- function(
     )$residuals
 
     # partial y residuals can be computed as follows
-    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+    # see https://github.com/ropensci/software-review/issues/703
+    # #issuecomment-3083318034
 
     resy <- resid(model) +
       resx * coef(model)[[as.character(formulas$x)]]
@@ -306,7 +307,8 @@ partialling_out.fixest <- function(
     )$residuals
 
     # partial y residuals can be computed as follows
-    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+    # see https://github.com/ropensci/software-review/issues/703
+    # #issuecomment-3083318034
 
     resy <- resid(model) +
       resx * coef(model)[[as.character(formulas$x)]]
@@ -440,7 +442,8 @@ partialling_out.felm <- function(
     )$residuals
 
     # partial y residuals can be computed as follows
-    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+    # see https://github.com/ropensci/software-review/issues/703
+    # #issuecomment-3083318034
 
     resy <- resid(model) +
       resx * coef(model)[[as.character(formulas$x)]]
