@@ -65,10 +65,21 @@
 <li><p>Returns a data.frame with residualised variables instead of a plot, thus offering more freedom of what to do with the results.</p></li>
 </ul>
 <div class="section level2">
+<h2 id="using-the-frisch-waugh-lovell-theorem">Using the Frisch-Waugh-Lovell theorem<a class="anchor" aria-label="anchor" href="#using-the-frisch-waugh-lovell-theorem"></a>
+</h2>
+<p>The Frisch-Waugh-Lovell theorem states that for a linear model</p>
+<pre class="math"><code>Y = X_1 \beta_1 + X_2 \beta_2 + u</code></pre>
+<p>The coefficient <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%7B%5Cbeta%7D_1%20%22%5Chat%7B%5Cbeta%7D_1%22" alt="\hat{\beta}_1"> will be equivalent to the coefficient, <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctilde%7B%5Cbeta%7D_1%20%22%5Ctilde%7B%5Cbeta%7D_1%22" alt="\tilde{\beta}_1">, from the regression of</p>
+<pre class="math"><code>M_{X_2} Y = M_{X_2} X_1 \beta_1 + M_{X_1} u</code></pre>
+<p>Where <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_2%7D%20Y%20%22M_%7BX_2%7D%20Y%22" alt="M_{X_2} Y"> are the residuals of the regression of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;Y%20%22Y%22" alt="Y"> on <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_2%20%22X_2%22" alt="X_2"> and <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_2%7DX_1%20%22M_%7BX_2%7DX_1%22" alt="M_{X_2}X_1"> are the residuals of the regression of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_1%20%22X_1%22" alt="X_1"> on <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_2%20%22X_2%22" alt="X_2">.</p>
+<p><br></p>
+<p>This theorem is designed to help simplifying linear and, particularly, fixed effects models for easier visualisation and interpretation, transforming a multiple regression into a simple one that can be easily visualised via a scatterplot or further used in other models.</p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of partialling.out from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"marcboschmatas/partialling.out"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -76,7 +87,7 @@
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <p>The workflow for <code>partialling.out</code> is rather simple: first, create a linear or fixed effects model.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://marcboschmatas.github.io/partialling.out/">partialling.out</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/tinyplot/" class="external-link">tinyplot</a></span><span class="op">)</span></span>
@@ -106,10 +117,10 @@
 <span><span class="co">#&gt; Multiple R-squared:  0.7892, Adjusted R-squared:  0.7874 </span></span>
 <span><span class="co">#&gt; F-statistic: 421.9 on 3 and 338 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>Using the <code>partialling_out</code> function, you can get the residualised variable of interest (bill length) and of the first explanatory variable (bill_length), i.e. it would return the residuals of the following two regressions.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modely</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span><span class="va">modelx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bill_depth_mm</span> <span class="op">~</span> <span class="va">species</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html" class="external-link">tt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -151,12 +162,7 @@
 <div class="section level2">
 <h2 id="checking-the-results">Checking the results<a class="anchor" aria-label="anchor" href="#checking-the-results"></a>
 </h2>
-<p>The Frisch-Waugh-Lovell theorem states that for a linear model</p>
-<pre class="math"><code>Y = X_1 \beta_1 + X_2 \beta_2 + u</code></pre>
-<p>The coefficient <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Chat%7B%5Cbeta%7D_1%20%22%5Chat%7B%5Cbeta%7D_1%22" alt="\hat{\beta}_1"> will be equivalent to the coefficient, <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;%5Ctilde%7B%5Cbeta%7D_1%20%22%5Ctilde%7B%5Cbeta%7D_1%22" alt="\tilde{\beta}_1">, from the regression of</p>
-<pre class="math"><code>M_{X_2} Y = M_{X_2} X_1 \beta_1 + M_{X_1} u</code></pre>
-<p>Where <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_2%7D%20Y%20%22M_%7BX_2%7D%20Y%22" alt="M_{X_2} Y"> are the residuals of the regression of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;Y%20%22Y%22" alt="Y"> on <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_2%20%22X_2%22" alt="X_2"> and <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;M_%7BX_2%7DX_1%20%22M_%7BX_2%7DX_1%22" alt="M_{X_2}X_1"> are the residuals of the regression of <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_1%20%22X_1%22" alt="X_1"> on <img src="https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&amp;space;%5Cbg_white&amp;space;X_2%20%22X_2%22" alt="X_2">.</p>
-<p><br> Accordingly, the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
+<p>As stated above, if we follow following the Frisch-Waugh-Lovell theorem the coefficient of <code>res_bill_depth_mm</code> in the model <code>lm(res_bill_length_mm ~ res_bill_depth_mm)</code> will be the same of the coefficient of <code>bill_depth_mm</code> in the original model.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">res_bill_length_mm</span> <span class="op">~</span> <span class="va">res_bill_depth_mm</span>, data <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span>
 <span></span>

@@ -788,11 +788,11 @@ be weighted as well.</p>
 only for variables other than the main explanatory variable, i.e.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_depth_mm</span> <span class="op">~</span> <span class="va">bill_length_mm</span> <span class="op">|</span> <span class="va">species</span><span class="op">^</span><span class="va">sex</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <p>is supported, but</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="va">bill_depth_mm</span> <span class="op">~</span> <span class="fu"><a href="https://lrberge.github.io/fixest/reference/i.html" class="external-link">i</a></span><span class="op">(</span><span class="va">bill_length_mm</span>, <span class="va">species</span><span class="op">)</span> <span class="op">|</span> <span class="va">sex</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/partialling_out.html">partialling_out</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <p>will yield an error. Therefore, if your main explanatory variable is
 an interaction, it should be built outside the model if you intend to
 partial it out afterwards.</p>
