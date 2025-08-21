@@ -9,6 +9,7 @@ License: GPL (>= 3)
 BugReports: https://github.com/marcboschmatas/partialling.out/issues
 Suggests: 
     tinytest,
+    tinyplot,
     knitr,
     rmarkdown,
     palmerpenguins,
@@ -28,6 +29,5 @@ Imports:
     rlang,
     fixest,
     lfe,
-    stats,
-    tinyplot
+    stats
 URL: https://marcboschmatas.github.io/partialling.out/
