@@ -7,26 +7,22 @@
 #' Will accept lm, felm (lfe package), and feols (fixest package) objects
 #' @title prepare_formula: create partial formulas from an existing model
 #' @param model object for which we want to residualise variables
-#' @param both if `TRUE` will residualise both the variable of interest and the
-#' first explanatory variable in the model. If `FALSE`, only the latter.
-#' Set to `TRUE` by default
-#' @returns a list with five (four if `both = FALSE`) elements. `filter_terms`,
+#' @returns a list with elements. `filter_terms`,
 #' which is a character vector with the column names to select when subsetting
-#' the model database. `formulax`, the formula for the main explanatory variable
-#' partial model, if `both` is set to `TRUE`, `formulay`, the formula for
-#' the variable of interest partial model, `y` for the name of the interest
+#' the model database, `formulax`, the formula for the main explanatory variable
+#' partial model, `y` for the name of the interest
 #' variable, and `x` for the name of the main explanatory variable
 #' @srrstats {G2.1} *Function is a generic with S3 methods for all accepted input models*
 #' @noRd
 
 # nolint end
-prepare_formula <- function(model, both) {
+prepare_formula <- function(model) {
   UseMethod("prepare_formula")
 }
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.lm <- function(model, both = TRUE) {
+prepare_formula.lm <- function(model) {
   # extract formula from models & terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)
@@ -55,34 +51,23 @@ prepare_formula.lm <- function(model, both = TRUE) {
   filter_terms <- unique(filter_terms)
 
   # make formulas ----
-  if (both) {
-    # make formula for y on controls
-    formulay <- paste0(y, " ~ ", paste0(controls, collapse = " + "))
-    # make formula for 1st x on controls
-    formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list(
-      "filter_terms" = filter_terms,
-      "formulay" = formulay,
-      "formulax" = formulax,
-      "y" = y,
-      "x" = x
-    )
-  } else {
-    formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
-    out <- list(
-      "filter_terms" = filter_terms,
-      "formulax" = formulax,
-      "y" = y,
-      "x" = x
-    )
-  }
+  formulax <- paste0(x, " ~ ", paste0(controls, collapse = " + "))
+  out <- list(
+    "filter_terms" = filter_terms,
+    "formulax" = formulax,
+    "y" = y,
+    "x" = x
+  )
+
   return(out)
 }
 
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.fixest <- function(model, both = TRUE) {
+#' @importFrom stats coef
+#' @importFrom stats resid
+prepare_formula.fixest <- function(model) {
   # extract formula from model and terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)
@@ -124,7 +109,7 @@ prepare_formula.fixest <- function(model, both = TRUE) {
 
   # make formulas ----
 
-  # prepare common rhs to both partial equations
+  # prepare rhs
   rhs2 <- if (length(controls) == 0) {
     c("1", fe, instvar)
   } else {
@@ -133,32 +118,25 @@ prepare_formula.fixest <- function(model, both = TRUE) {
   rhs2 <- rhs2[!is.na(rhs2)]
   rhs2 <- paste0(rhs2, collapse = " | ")
 
-  if (both) {
-    formulay <- paste(y, rhs2, sep = " ~ ")
-    formulax <- paste(main_expvar, rhs2, sep = " ~ ")
-    out <- list(
-      "filter_terms" = filter_terms,
-      "formulay" = formulay,
-      "formulax" = formulax,
-      "y" = y,
-      "x" = main_expvar
-    )
-  } else {
-    formulax <- paste(main_expvar, rhs2, sep = " ~ ")
+  ## prepare return object ----
 
-    out <- list(
-      "filter_terms" = c(y, x, controls),
-      "formulax" = formulax,
-      "y" = y,
-      "x" = main_expvar
-    )
-  }
+  formulax <- paste(main_expvar, rhs2, sep = " ~ ")
+
+  out <- list(
+    "filter_terms" = filter_terms,
+    "formulax" = formulax,
+    "y" = y,
+    "x" = main_expvar
+  )
+
   return(out)
 }
 
 #' @importFrom stats formula
 #' @importFrom stats terms
-prepare_formula.felm <- function(model, both = TRUE) {
+#' @importFrom stats coef
+#' @importFrom stats resid
+prepare_formula.felm <- function(model) {
   # extract formula from model and terms from formula ----
   f <- formula(model)
   terms_obj <- terms(f)
@@ -203,26 +181,14 @@ prepare_formula.felm <- function(model, both = TRUE) {
 
   # create formulas
 
-  if (both) {
-    formulay <- paste(y, rhs2, sep = " ~ ")
-    formulax <- paste(main_expvar, rhs2, sep = " ~ ")
-    out <- list(
-      "filter_terms" = filter_terms,
-      "formulay" = formulay,
-      "formulax" = formulax,
-      "y" = y,
-      "x" = main_expvar
-    )
-  } else {
-    formulax <- paste(main_expvar, rhs2, sep = " ~ ")
+  formulax <- paste(main_expvar, rhs2, sep = " ~ ")
 
-    out <- list(
-      "filter_terms" = c(y, x, controls),
-      "formulax" = formulax,
-      "y" = y,
-      "x" = main_expvar
-    )
-  }
+  out <- list(
+    "filter_terms" = filter_terms,
+    "formulax" = formulax,
+    "y" = y,
+    "x" = main_expvar
+  )
 
   return(out)
 }

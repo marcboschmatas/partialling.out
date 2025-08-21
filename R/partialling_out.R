@@ -85,7 +85,7 @@ partialling_out.lm <- function(
 ) {
   # prepare partial formulas and filter terms ----
 
-  formulas <- prepare_formula(model = model, both = both)
+  formulas <- prepare_formula(model = model)
 
   # check data is provided and is a data.frame ----
 
@@ -165,18 +165,19 @@ partialling_out.lm <- function(
   # generate residuals ----
 
   if (both) {
-    resy <- lm(
-      as.formula(formulas$formulay),
-      data = data,
-      weights = weights,
-      ...
-    )$residuals
     resx <- lm(
       as.formula(formulas$formulax),
       data = data,
       weights = weights,
       ...
     )$residuals
+
+    # partial y residuals can be computed as follows
+    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+
+    resy <- resid(model) +
+      resx * coef(model)[[as.character(formulas$x)]]
+
     resdf <- data.frame("y" = resy, "x" = resx)
 
     colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
@@ -184,7 +185,7 @@ partialling_out.lm <- function(
     resx <- lm(
       as.formula(formulas$formulax),
       data = data,
-      eights = weights,
+      weights = weights,
       ...
     )$residuals
     resdf <- data.frame("y" = data[[formulas$y]], "x" = resx)
@@ -194,6 +195,10 @@ partialling_out.lm <- function(
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"
   }
+
+  # give partial_residual class to resdf to make plot method
+
+  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
 
   return(resdf)
 }
@@ -212,7 +217,7 @@ partialling_out.fixest <- function(
 ) {
   # prepare partial formulas and filter terms ----
 
-  formulas <- prepare_formula(model = model, both = both)
+  formulas <- prepare_formula(model = model)
 
   # check data is provided and is a data.frame ----
 
@@ -293,36 +298,38 @@ partialling_out.fixest <- function(
   # generate residuals ----
 
   if (both) {
-    yres <- fixest::feols(
-      as.formula(formulas$formulay),
-      data = data,
-      weights = weights,
-      ...
-    )$residuals
-    xres <- fixest::feols(
+    resx <- fixest::feols(
       as.formula(formulas$formulax),
       data = data,
       weights = weights,
       ...
     )$residuals
 
-    resdf <- data.frame("y" = yres, "x" = xres)
+    # partial y residuals can be computed as follows
+    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+
+    resy <- resid(model) +
+      resx * coef(model)[[as.character(formulas$x)]]
+
+    resdf <- data.frame("y" = resy, "x" = resx)
     colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   } else {
-    xres <- fixest::feols(
+    resx <- fixest::feols(
       as.formula(formulas$formulax),
       data = data,
       weights = weights,
       ...
     )$residuals
 
-    resdf <- data.frame("y" = data[[formulas$y]], "x" = xres)
+    resdf <- data.frame("y" = data[[formulas$y]], "x" = resx)
   }
 
   if (!is.null(weights)) {
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"
   }
+  # give partial_residual class to resdf to make plot method
+  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
 
   return(resdf)
 }
@@ -340,7 +347,7 @@ partialling_out.felm <- function(
 ) {
   # prepare partial formulas and filter terms ----
 
-  formulas <- prepare_formula(model = model, both = both)
+  formulas <- prepare_formula(model = model)
 
   # check data is provided and is a data.frame ----
 
@@ -425,29 +432,29 @@ partialling_out.felm <- function(
   # generate residuals ----
 
   if (both) {
-    yres <- lfe::felm(
-      as.formula(formulas$formulay),
-      data = data,
-      weights = weights,
-      ...
-    )$residuals
-    xres <- lfe::felm(
+    resx <- lfe::felm(
       as.formula(formulas$formulax),
       data = data,
       weights = weights,
       ...
     )$residuals
 
-    resdf <- data.frame("y" = yres, "x" = xres)
+    # partial y residuals can be computed as follows
+    # see https://github.com/ropensci/software-review/issues/703#issuecomment-3083318034
+
+    resy <- resid(model) +
+      resx * coef(model)[[as.character(formulas$x)]]
+
+    resdf <- data.frame("y" = resy, "x" = resx)
     colnames(resdf) <- paste0("res_", c(formulas$y, formulas$x))
   } else {
-    xres <- lfe::felm(
+    resx <- lfe::felm(
       as.formula(formulas$formulax),
       data = data,
       weights = weights,
       ...
     )$residuals
-    resdf <- data.frame("y" = data[[formulas$y]], "x" = xres)
+    resdf <- data.frame("y" = data[[formulas$y]], "x" = resx)
     colnames(resdf) <- c(formulas$y, paste0("res_", formulas$x))
   }
 
@@ -455,5 +462,10 @@ partialling_out.felm <- function(
     resdf <- cbind(resdf, weights)
     colnames(resdf)[3] <- "weights"
   }
+
+  # give partial_residual class to resdf to make plot method
+
+  resdf <- structure(resdf, class = c("partial_residual", "data.frame"))
+
   return(resdf)
 }

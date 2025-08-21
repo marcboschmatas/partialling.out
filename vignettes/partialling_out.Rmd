@@ -155,7 +155,7 @@ So far, interaction terms with `:`, `*`, or `^` (in `feols`) as well as varying 
 #| eval: false
 
 feols(bill_depth_mm ~ bill_length_mm | species^sex, data = penguins) |>
-  partialling_out()
+  partialling_out(data = penguins)
 ```
 is supported, but
 
@@ -163,7 +163,7 @@ is supported, but
 #| eval: false
 
 feols(bill_depth_mm ~ i(bill_length_mm, species) | sex, data = penguins) |>
-  partialling_out()
+  partialling_out(data = penguins)
 ```
 
 will yield an error. Therefore, if your main explanatory variable is an interaction, it should be built outside the model if you intend to partial it out afterwards.

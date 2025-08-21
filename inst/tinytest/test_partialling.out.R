@@ -859,21 +859,25 @@ expect_equal(
 NULL
 # nolint end
 
-## test that it returns a data.frame----
+## test that class from return object are partial_residuals and data.frame ----
 model <- lm(bill_length_mm ~ bill_depth_mm + species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
+expect_true("partial_residual" %in% class(res))
 
 model <- feols(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
+expect_true("partial_residual" %in% class(res))
+
 
 model <- felm(bill_length_mm ~ bill_depth_mm | species, data = penguins)
 res <- partialling_out(model, data = penguins)
 
 expect_true("data.frame" %in% class(res))
+expect_true("partial_residual" %in% class(res))
 
 
 ## test that it returns a data.frame of two columns if unweighted ----

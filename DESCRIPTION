@@ -13,7 +13,6 @@ Suggests:
     rmarkdown,
     palmerpenguins,
     tinytable,
-    tinyplot,
     fwlplot,
     tsibble,
     units,
@@ -29,5 +28,6 @@ Imports:
     rlang,
     fixest,
     lfe,
-    stats
+    stats,
+    tinyplot
 URL: https://marcboschmatas.github.io/partialling.out/
